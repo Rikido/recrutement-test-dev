@@ -22,6 +22,7 @@ class Client extends Model
         'annual_sales_1',
         'annual_sales_2',
         'annual_sales_3',
+        'credit_score',
     ];
 
 }
