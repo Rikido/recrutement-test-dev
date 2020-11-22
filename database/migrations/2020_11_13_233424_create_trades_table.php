@@ -17,6 +17,8 @@ class CreateTradesTable extends Migration
             $table->Increments('id');//シーケンスID
             $table->integer('transaction_amount');//取引額
             $table->integer('months_of_term');//返済期間月数
+            $table->integer('client_id')->unsigned();//取引先id
+            $table->foreign('client_id')->references('id')->on('clients');//取引先id
             $table->timestamps();//作成日時、更新日時
         });
     }

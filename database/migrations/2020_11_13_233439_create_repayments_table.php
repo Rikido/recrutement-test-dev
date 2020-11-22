@@ -14,7 +14,7 @@ class CreateRepaymentsTable extends Migration
     public function up()
     {
         Schema::create('repayments', function (Blueprint $table) {
-            $table->bigIncrements('id');//シーケンスID
+            $table->Increments('id');//シーケンスID
             $table->integer('payment_month');//入金対象月
             $table->integer('trade_id')->unsigned();//掛取引id
             $table->foreign('trade_id')->references('id')->on('trades');//掛取引id

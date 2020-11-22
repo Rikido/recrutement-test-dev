@@ -14,7 +14,7 @@ class CreateClientsTable extends Migration
     public function up()
     {
         Schema::create('clients', function (Blueprint $table) {
-            $table->bigIncrements('id');//シーケンスID
+            $table->Increments('id');//シーケンスID
             $table->string('client_name', 50);//取引先名
             $table->integer('capital_amount');//資本金額
             $table->integer('annual_sales_1');//売上高_前期
