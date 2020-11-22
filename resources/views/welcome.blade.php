@@ -51,11 +51,31 @@
             .links > a {
                 color: #636b6f;
                 padding: 0 25px;
-                font-size: 13px;
+                font-size: 16px;
                 font-weight: 600;
                 letter-spacing: .1rem;
                 text-decoration: none;
                 text-transform: uppercase;
+            }
+
+            .links > h1 {
+                color: #636b6f;
+                padding: 0 25px;
+                font-size: 16px;
+                font-weight: 600;
+                letter-spacing: .1rem;
+                text-decoration: none;
+                text-transform: uppercase;
+            }
+            
+            h1 > span {
+                color: #636b6f;
+                font-size: 15px;
+                font-weight: 600;
+                letter-spacing: .1rem;
+                text-decoration: none;
+                text-transform: uppercase;
+                text-decoration:underline #636b6f;
             }
 
             .m-b-md {
@@ -86,10 +106,10 @@
 
                 <div class="links">
                     <a href="/index_clients">取引先一覧</a>
-                    <a href="/add_clients">取引先登録・編集</a>
+                    <a href="/add_clients">取引先登録</a>
                     <a href="/index_trades">掛取引一覧</a>
-                    <a href="/add_trades">掛取引登録</a>
                     <a href="/add_payments">月次返済処理登録</a>
+                    <h1>※<span>取引先情報の編集</span>・<span>掛取引登録</span>は取引先一覧から実行できます。</h1>
                 </div>
             </div>
         </div>
