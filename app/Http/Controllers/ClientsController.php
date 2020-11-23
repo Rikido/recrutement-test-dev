@@ -58,6 +58,14 @@ class ClientsController extends Controller
 
     public function update($id, Request $request, Client $client)
     {
+      $request->validate([
+          'client_name' => 'required',
+          'capital_amount' => 'required||digits_between:1,10',
+          'annual_sales_1' => 'digits_between:1,13',
+          'annual_sales_2' => 'digits_between:1,13',
+          'annual_sales_3' => 'digits_between:1,13',
+      ]);
+
         if(!auth() ->check()){
           return redirect('login');
         }
