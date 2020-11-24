@@ -9,6 +9,13 @@ class Repayment extends Model
     //
     public function trades()
     {
-        return $this->belongsTo('App\Models\Trade', 'foreign_key');
+        return $this->belongsTo('App\Models\Trade', "trade_id");
     }
+
+    protected $fillable = [
+        'payment_month',
+        'trade_id',
+        'amount',
+        'delay_flag',
+    ];
 }

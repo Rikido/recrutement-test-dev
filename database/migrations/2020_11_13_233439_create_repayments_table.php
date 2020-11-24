@@ -15,11 +15,11 @@ class CreateRepaymentsTable extends Migration
     {
         Schema::create('repayments', function (Blueprint $table) {
             $table->Increments('id');//シーケンスID
-            $table->integer('payment_month');//入金対象月
+            $table->string('payment_month');//入金対象月
             $table->integer('trade_id')->unsigned();//掛取引id
             $table->foreign('trade_id')->references('id')->on('trades');//掛取引id
             $table->integer('amount');//入金額
-            $table->boolean('delay_flag');//遅延フラグ
+            $table->string('delay_flag');//遅延フラグ
             $table->timestamps();
         });
     }

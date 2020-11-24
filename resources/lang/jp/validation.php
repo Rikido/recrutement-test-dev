@@ -150,6 +150,8 @@ return [
         'annual_sales_1' => '売上高(前期)',
         'annual_sales_2' => '売上高(前々期)',
         'annual_sales_3' => '売上高(前々々期)',
+        'transaction_amount' => '掛取引金額',
+        'months_of_term' => '返済期間月数',
     ],
 
 ];
