@@ -105,11 +105,12 @@
                 </div>
 
                 <div class="links">
+                    <a href="/add_clients">新規取引先登録</a>
                     <a href="/index_clients">取引先一覧</a>
-                    <a href="/add_clients">取引先登録</a>
                     <a href="/index_trades">掛取引一覧</a>
-                    <a href="/add_payments">月次返済処理登録</a>
+                    <a href="/index_repayments">月次返済処理一覧</a>
                     <h1>※<span>取引先情報の編集</span>・<span>掛取引登録</span>は取引先一覧から実行できます。</h1>
+                    <h1>※<span>掛取引の編集</span>・<span>月次返済処理登録</span>は掛取引一覧から実行できます。</h1>
                 </div>
             </div>
         </div>
