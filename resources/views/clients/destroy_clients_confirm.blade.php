@@ -12,7 +12,7 @@
 
   <div class="edit-clients">
   
-    <h1>取引先編集</h1>
+    <h1>取引先削除</h1>
     <h2>{{ $client->client_name }}</h2>
 
     @if($errors->any())

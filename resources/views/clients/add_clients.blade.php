@@ -36,28 +36,28 @@
       <div class="capital-amount">
         <label for="capital_amount">資本金額</label>
         <div class="input-form">
-          <input type="text" name="capital_amount" class="capital-text" placeholder="資本金額" value>
+          <input type="number" name="capital_amount" class="capital-text" placeholder="資本金額" value>
         </div>
       </div>
 
       <div class="annual-sales">
         <label for="annual_sales_1">売上高(前期)</label>
         <div class="input-form">
-          <input type="text" name="annual_sales_1" class="sales-text" placeholder="売上高(前期)" value>
+          <input type="number" name="annual_sales_1" class="sales-text" placeholder="売上高(前期)" value>
         </div>
       </div>
       
       <div class="annual-sales">
         <label for="annual_sales_2">売上高(前々期)</label>
         <div class="input-form">
-          <input type="text" name="annual_sales_2" class="sales-text" placeholder="売上高(前々期)" value>
+          <input type="number" name="annual_sales_2" class="sales-text" placeholder="売上高(前々期)" value>
         </div>
       </div>
       
       <div class="annual-sales">
         <label for="annual_sales_3">売上高(前々々期)</label>
         <div class="input-form">
-          <input type="text" name="annual_sales_3" class="sales-text" placeholder="売上高(前々々期)" value>
+          <input type="number" name="annual_sales_3" class="sales-text" placeholder="売上高(前々々期)" value>
         </div>
       </div>
       
