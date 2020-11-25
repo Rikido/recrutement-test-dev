@@ -43,8 +43,8 @@
                 <td>-</td>
                 <td>{{ $trade->created_at }}</td>
                 <td>{{ $trade->updated_at }}</td>
-                <td><a href="{{ route('edit', ['id' => $trade->id]) }}">🖋</a></td>
-                <td><a href="{{ route('confirm', ['id' => $trade->id]) }}">🗑</a></td>
+                <td><a href="{{ route('edit_trade', ['id' => $trade->id]) }}">🖋</a></td>
+                <td><a href="{{ route('confirm_trade', ['id' => $trade->id]) }}">🗑</a></td>
               </tr>
           @endforeach
           

@@ -49,8 +49,8 @@
 
                 <td>{{ $repayment->created_at }}</td>
                 <td>{{ $repayment->updated_at }}</td>
-                <td><a href="{{ route('edit', ['id' => $repayment->id]) }}">🖋</a></td>
-                <td><a href="{{ route('confirm', ['id' => $repayment->id]) }}">🗑</a></td>
+                <td><a href="{{ route('edit_repayment', ['id' => $repayment->id]) }}">🖋</a></td>
+                <td><a href="{{ route('confirm_repayment', ['id' => $repayment->id]) }}">🗑</a></td>
               </tr>
           @endforeach
           

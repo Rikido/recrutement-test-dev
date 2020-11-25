@@ -43,8 +43,8 @@
               <td>-</td>
               <td>{{ $client->created_at }}</td>
               <td>{{ $client->updated_at }}</td>
-              <td><a href="{{ route('edit', ['id' => $client->id]) }}">🖋</a></td>
-              <td><a href="{{ route('confirm', ['id' => $client->id]) }}">🗑</a></td>
+              <td><a href="{{ route('edit_client', ['id' => $client->id]) }}">🖋</a></td>
+              <td><a href="{{ route('confirm_client', ['id' => $client->id]) }}">🗑</a></td>
             </tr>
           @endforeach
 

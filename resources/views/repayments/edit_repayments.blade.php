@@ -22,7 +22,7 @@
     </div>
     @endif
 
-    <form action="{{ route('update', $repayment->id) }}" method="POST">
+    <form action="{{ route('update_repayment', $repayment->id) }}" method="POST">
       @method('PUT')
       @csrf
   

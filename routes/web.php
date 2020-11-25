@@ -16,20 +16,28 @@ Route::get('/', function () {
 });
 
 Route::get('index_clients', 'ClientsController@index_clients');
-
 Route::get('add_clients', 'ClientsController@add_clients');
 Route::post('clients/register', 'ClientsController@register');
-Route::get('clients/edit/{id}', 'ClientsController@edit')->name('edit');
-Route::put('clients/update/{id}', 'ClientsController@update')->name('update');
-Route::get('clients/confirm/{id}', 'ClientsController@destroy_confirm')->name('confirm');
-Route::delete('clients/destroy/{id}', 'ClientsController@destroy')->name('destroy');
+Route::get('clients/edit/{id}', 'ClientsController@edit')->name('edit_client');
+Route::put('clients/update/{id}', 'ClientsController@update')->name('update_client');
+Route::get('clients/confirm/{id}', 'ClientsController@destroy_confirm')->name('confirm_client');
+Route::delete('clients/destroy/{id}', 'ClientsController@destroy')->name('destroy_client');
 
 Route::get('index_trades', 'TradesController@index_trades');
-
 Route::get('/{id}/add_trades', 'TradesController@add_trades');
 Route::post('trades/register', 'TradesController@register');
+Route::get('trades/edit/{id}', 'TradesController@edit')->name('edit_trade');
+Route::put('trades/update/{id}', 'TradesController@update')->name('update_trade');
+Route::get('trades/confirm/{id}', 'TradesController@destroy_confirm')->name('confirm_trade');
+Route::delete('trades/destroy/{id}', 'TradesController@destroy')->name('destroy_trade');
 
-Route::get('add_payments', 'PaymentsController@add_payments');
+Route::get('index_repayments', 'RepaymentsController@index_repayments');
+Route::get('/{id}/add_repayments', 'RepaymentsController@add_repayments');
+Route::post('repayments/register', 'RepaymentsController@register');
+Route::get('repayments/edit/{id}', 'RepaymentsController@edit')->name('edit_repayment');
+Route::put('repayments/update/{id}', 'RepaymentsController@update')->name('update_repayment');
+Route::get('repayments/confirm/{id}', 'RepaymentsController@destroy_confirm')->name('confirm_repayment');
+Route::delete('repayments/destroy/{id}', 'RepaymentsController@destroy')->name('destroy_repayment');
 
 Auth::routes();
 

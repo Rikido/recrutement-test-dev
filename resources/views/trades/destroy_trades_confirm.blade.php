@@ -23,7 +23,7 @@
     </div>
     @endif
 
-    <form action="{{ route('destroy', $trade->id) }}" method="POST">
+    <form action="{{ route('destroy_trade', $trade->id) }}" method="POST">
       @method('DELETE')
       @csrf
 
