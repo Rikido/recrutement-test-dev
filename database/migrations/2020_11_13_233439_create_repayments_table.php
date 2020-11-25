@@ -20,6 +20,7 @@ class CreateRepaymentsTable extends Migration
             $table->foreign('trade_id')->references('id')->on('trades');//掛取引id
             $table->integer('amount');//入金額
             $table->string('delay_flag');//遅延フラグ
+            $table->integer('credit_minus');//遅延が発生した際の信用スコアの減点点数
             $table->timestamps();
         });
     }

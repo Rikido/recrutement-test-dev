@@ -17,5 +17,6 @@ class Repayment extends Model
         'trade_id',
         'amount',
         'delay_flag',
+        'credit_minus',
     ];
 }
