@@ -19,6 +19,7 @@ class CreateTradesTable extends Migration
             $table->integer('months_of_term');//返済期間月数
             $table->integer('client_id')->unsigned();//取引先id
             $table->foreign('client_id')->references('id')->on('clients');//取引先id
+            $table->integer('trade_score');//取引ごとの信用スコア（これを加重平均することでcredit_scoreを算出する）
             $table->timestamps();//作成日時、更新日時
         });
     }

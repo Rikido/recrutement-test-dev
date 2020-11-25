@@ -51,6 +51,13 @@
           <input type="number" name="months_of_term" class="months-text" placeholder="返済期間月数" value>
         </div>
       </div>
+  
+      <div class="trade-score">
+        <label for="trade_score"></label>
+        <div class="input-form">
+          <input type="hidden" name="trade_score" class="trade-score-text" placeholder="掛取引信用スコア" value="100">
+        </div>
+      </div>
 
       <button type="submit" class="submit-btn">登録</button>
     </from>

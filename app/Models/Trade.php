@@ -21,5 +21,6 @@ class Trade extends Model
         'transaction_amount',
         'months_of_term',
         'client_id',
+        'trade_score',
     ];
 }
