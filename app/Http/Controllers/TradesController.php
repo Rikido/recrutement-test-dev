@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Trade;
 use App\Models\Client;
+use App\Models\Repayment;
 
 class TradesController extends Controller
 {
@@ -17,9 +18,11 @@ class TradesController extends Controller
         }
 
         $trades = Trade::with('clients')->paginate(5);
+        $repayments = Repayment::with('trades');
 
         return view('/trades/index_trades', [
-          'trades' => $trades
+          'trades' => $trades,
+          'repayments' => $repayments,
         ]);
     }
 
@@ -37,8 +40,11 @@ class TradesController extends Controller
         ]);
     }
 
-    public function register(Request $request)
+    public function register($id, Request $request)
     {
+
+        $client = Client::find($id);
+        
         $request->validate([
             'client_id' => 'required',
             'transaction_amount' => 'required||digits_between:1,13',
@@ -46,25 +52,62 @@ class TradesController extends Controller
             //あとは当日時点与信枠 / 未回収掛売り残高 / 貸付可能枠残高を考慮し別途バリデーション
         ]);
         
+        $request->request->add(['transaction_balance'=>$request->transaction_amount]);
         Trade::create($request->all());
-        
-        return redirect('/');
-    }
 
-    public function edit($id)
-    {
-        if(!auth() ->check()){
-          return redirect('login');
+        //clientsのcredit_scoreへの反映
+        $trades_count=Trade::where('client_id', $id)
+               ->count();
+        
+        //clientに紐づく最新のtradeを3件取得
+        if ($trades_count==0){
+          $first_trade_score=65;
+          $first_transaction_amount=0;
+          $sum_transaction_balance=0;
+        }
+        else{
+          $first_trade=Trade::where('client_id', $id)
+               ->orderBy('created_at', 'desc')
+               ->first();
+          $first_trade_score=$first_trade->trade_score;
+          $first_transaction_amount=$first_trade->transaction_amount;
+          $sum_transaction_balance=Trade::where('client_id', $id)
+                                  ->sum('transaction_balance');
         }
 
-        $trade = Trade::find($id);
-        $client = Client::find($trade->client_id);
+        if ($trades_count<=1){
+          $second_trade_score=65;
+          $second_transaction_amount=0;
+        }
+        else{
+          $second_trade=Trade::where('client_id', $id)
+                       ->where('id', '<', $first_trade->id)
+                       ->orderBy('created_at', 'desc')
+                       ->first();
+          $second_trade_score=$second_trade->trade_score;
+          $second_transaction_amount=$second_trade->transaction_amount;
+        }
 
-        return view('/trades/edit_trades',  [
-          'id' => $id,
-          'trade' => $trade,
-          'client' => $client
-        ]);
+        if ($trades_count<=2){
+          $third_trade_score=65;
+          $third_transaction_amount=0;
+        }
+        else{
+          $third_trade=Trade::where('client_id', $id)
+                      ->where('id', '<', $second_trade->id)
+                      ->orderBy('created_at', 'desc')
+                      ->first();
+          $third_trade_score=$third_trade->trade_score;
+          $third_transaction_amount=$third_trade->transaction_amount;
+        }
+
+        //加重平均を行い、credit_scoreに反映
+        $client->credit_score = $first_trade_score*0.5 + $second_trade_score*0.3 + $third_trade_score*0.2;
+        $client->credit_line = $client->capital_amount*0.1*0.3 + ($client->annual_sales_1*0.5 + $client->annual_sales_2*0.3 + $client->annual_sales_3*0.2)*0.4*0.3 + ($first_transaction_amount*0.5 + $second_transaction_amount*0.3 + $third_transaction_amount*0.2)*0.4;
+        $client->account_receivable_balance = $sum_transaction_balance;
+        $client->save();
+
+        return redirect('/');
     }
 
     public function update($id, Request $request, Trade $trade)
@@ -110,6 +153,58 @@ class TradesController extends Controller
 
         $trade = Trade::find($id);
         $trade->delete();
+        $client = Client::find($trade->client_id);
+
+        //clientsのcredit_scoreへの反映
+        $trades_count=Trade::where('client_id', $id)
+               ->count();
+        
+        //clientに紐づく最新のtradeを3件取得
+        if ($trades_count==0){
+          $first_trade_score=65;
+          $first_transaction_amount=0;
+          $sum_transaction_balance=0;
+        }
+        else{
+          $first_trade=Trade::where('client_id', $id)
+                      ->orderBy('created_at', 'desc')
+                      ->first();
+          $first_trade_score=$first_trade->trade_score;
+          $first_transaction_amount=$first_trade->transaction_amount;
+          $sum_transaction_balance=Trade::where('client_id', $id)
+                                  ->sum('transaction_balance');
+        }
+
+        if ($trades_count<=1){
+          $second_trade_score=65;
+          $second_transaction_amount=0;
+        }
+        else{
+          $second_trade=Trade::where('client_id', $id)
+                       ->where('id', '<', $first_trade->id)
+                       ->orderBy('created_at', 'desc')
+                       ->first();
+          $second_trade_score=$second_trade->trade_score;
+          $second_transaction_amount=$second_trade->transaction_amount;
+        }
+
+        if ($trades_count<=2){
+          $third_trade_score=65;
+          $third_transaction_amount=0;
+        }
+        else{
+          $third_trade=Trade::where('client_id', $id)
+                      ->where('id', '<', $second_trade->id)
+                      ->orderBy('created_at', 'desc')
+                      ->first();
+          $third_trade_score=$third_trade->trade_score;
+          $third_transaction_amount=$third_trade->transaction_amount;
+        }
+
+        //加重平均を行い、credit_scoreに反映
+        $client->credit_score = $first_trade_score*0.5 + $second_trade_score*0.3 + $third_trade_score*0.2;
+        $client->credit_line = $client->capital_amount*0.1*0.3 + ($client->annual_sales_1*0.5 + $client->annual_sales_2*0.3 + $client->annual_sales_3*0.2)*0.4*0.3 + ($first_transaction_amount*0.5 + $second_transaction_amount*0.3 + $third_transaction_amount*0.2)*0.4;
+        $client->save();
 
         return redirect('/');
     }
