@@ -43,23 +43,14 @@ class RepaymentsController extends Controller
 
           $trade = Trade::find($id);
           $client = Client::find($trade->client_id);
-          $must_be_amount = $trade->transaction_amount/$trade->months_of_term;
+          $must_be_amount = ceil($trade->transaction_amount/$trade->months_of_term);
+          $must_be_int_amount = intval($must_be_amount);
         
           $request->validate([
             'trade_id' => 'required',
             'payment_month' => 'required',
-            'amount' => "required|integer|same:{$must_be_amount}",
+            'amount' => "integer|lte:{$must_be_int_amount}|gte:{$must_be_int_amount}",
             'delay_flag' => 'required',
-          ]);
-
-          
-          $validator = Validator::make($request->all(), [
-              'trade_id' => 'required',
-              'payment_month' => 'required',
-              'amount' => 'required',
-              'delay_flag' => 'required',
-              //あとは当日時点与信枠 / 未回収掛売り残高 / 貸付可能枠残高を考慮し別途バリデーション
-              //delay_flag別途バリデーション
           ]);
           
           Repayment::create($request->all());
