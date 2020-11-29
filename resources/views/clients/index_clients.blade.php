@@ -39,8 +39,8 @@
               <td>{{ $client->id }}</td>
               <td>{{ $client->client_name }}</td>
               <td>{{ $client->credit_line }}</td>
-              <td>{{ $account_receivable_balance }}</td>
-              <td>-</td>
+              <td>{{ $client->account_receivable_balance }}</td>
+              <td>{{ $client->credit_line - $client->account_receivable_balance }}</td>
               <td>{{ $client->created_at }}</td>
               <td>{{ $client->updated_at }}</td>
               <td><a href="{{ route('edit_client', ['id' => $client->id]) }}">🖋</a></td>
