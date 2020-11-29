@@ -15,6 +15,15 @@ class Client extends Model
     {
         return $this->hasMany('App\Models\Trade');
     }
+    
+    public static function boot()
+    {
+      parent::boot();
+  
+      static::deleting(function($client_group) {
+        $client_group->trades()->delete();
+      });
+    }
 
     protected $fillable = [
         'client_name',
@@ -23,6 +32,8 @@ class Client extends Model
         'annual_sales_2',
         'annual_sales_3',
         'credit_score',
+        'credit_line',
+        'account_receivable_balance',
     ];
 
 }
