@@ -48,9 +48,8 @@ class TradesController extends Controller
         
         $request->validate([
             'client_id' => 'required',
-            'transaction_amount' => 'required||digits_between:1,13',
-            'months_of_term' => 'required||digits_between:1,2||max:84',
-            //あとは当日時点与信枠 / 未回収掛売り残高 / 貸付可能枠残高を考慮し別途バリデーション
+            'transaction_amount' => "required|integer|lte:{$able_balance}",
+            'months_of_term' => 'required|digits_between:1,2|lte:84',
         ]);
         
         $request->request->add(['transaction_balance'=>$request->transaction_amount]);
