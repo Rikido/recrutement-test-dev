@@ -26,7 +26,6 @@
               <th scope="col">支払い遅延</th>
               <th scope="col">月次返済登録日時</th>
               <th scope="col">最終更新日時</th>
-              <th scope="col">編集</th>
               <th scope="col">削除</th>
     
               </tr>
@@ -49,7 +48,6 @@
 
                 <td>{{ $repayment->created_at }}</td>
                 <td>{{ $repayment->updated_at }}</td>
-                <td><a href="{{ route('edit_repayment', ['id' => $repayment->id]) }}">🖋</a></td>
                 <td><a href="{{ route('confirm_repayment', ['id' => $repayment->id]) }}">🗑</a></td>
               </tr>
           @endforeach

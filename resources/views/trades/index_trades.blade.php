@@ -26,7 +26,6 @@
               <th scope="col">支払い遅延</th>
               <th scope="col">掛取引登録日時</th>
               <th scope="col">最終更新日時</th>
-              <th scope="col">編集</th>
               <th scope="col">削除</th>
     
               </tr>
@@ -39,11 +38,18 @@
                 <td>{{ $trade->id }}</td>
                 <td>{{ $trade->clients->client_name ??''}}</td>
                 <td>{{ $trade->transaction_amount }}</td>
+                <td>{{ $trade->transaction_balance }}</td>
+
+                @if ($trade->repayments->isEmpty())
                 <td>-</td>
-                <td>-</td>
+                @elseif ($trade->repayments->where('delay_flag',"yes")->isEmpty())
+                <td>なし</td>
+                @else
+                <td>あり</td>
+                @endif
+
                 <td>{{ $trade->created_at }}</td>
                 <td>{{ $trade->updated_at }}</td>
-                <td><a href="{{ route('edit_trade', ['id' => $trade->id]) }}">🖋</a></td>
                 <td><a href="{{ route('confirm_trade', ['id' => $trade->id]) }}">🗑</a></td>
               </tr>
           @endforeach
