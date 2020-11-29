@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>月次返済処理登録</title>
+  <link rel="stylesheet" href="{{ asset('css/add_clients.css') }}">
 </head>
 <body>
 
@@ -19,7 +20,7 @@
     </div>
     @endif
   
-    <form method="post" action="/repayments/register">
+    <form method="post" action="{{ route('register_repayment', $trade->id) }}">
     
       @csrf
   
@@ -51,12 +52,9 @@
         </div>
       </div>
   
-      <div class="delay-flag">
-        <label for="delay_flag">遅延フラグ</label>
-        <div class="input-form">
-          <input type="checkbox" name="delay_flag" class="delay-text" value="yes"> あり
-          <input type="checkbox" name="delay_flag" class="delay-text" value="no"> なし
-        </div>
+      <div class="delay-flag">遅延フラグ</br>
+          <input type="radio" name="delay_flag" value="yes">あり
+          <input type="radio" name="delay_flag" value="no">なし
       </div>
   
       <div class="credit-minus">

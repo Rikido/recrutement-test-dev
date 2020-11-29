@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>掛取引登録</title>
+  <link rel="stylesheet" href="{{ asset('css/add_clients.css') }}">
 </head>
 <body>
 
@@ -21,7 +22,7 @@
     </div>
     @endif
   
-    <form method="post" action="/trades/register">
+    <form method="post" action="{{ route('register_trade', $client->id) }}">
     
       @csrf
   
@@ -55,7 +56,7 @@
       <div class="trade-score">
         <label for="trade_score"></label>
         <div class="input-form">
-          <input type="hidden" name="trade_score" class="trade-score-text" placeholder="掛取引信用スコア" value="100">
+          <input type="hidden" name="trade_score" class="trade-score-text" placeholder="掛取引信用スコア" value=100>
         </div>
       </div>
 

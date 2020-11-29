@@ -38,8 +38,8 @@
               <td><a href="/{{$client->id}}/add_trades">⏩</a></td>
               <td>{{ $client->id }}</td>
               <td>{{ $client->client_name }}</td>
-              <td>-</td>
-              <td>-</td>
+              <td>{{ $client->credit_line }}</td>
+              <td>{{ $account_receivable_balance }}</td>
               <td>-</td>
               <td>{{ $client->created_at }}</td>
               <td>{{ $client->updated_at }}</td>

@@ -64,7 +64,7 @@
       <div hidden class="credit-score">
         <label for="credit_score"></label>
         <div class="input-form">
-          <input type="number" name="credit_score" class="credit-text" value="65">
+          <input type="number" name="credit_score" class="credit-text" value=65>
         </div>
       </div>
 
