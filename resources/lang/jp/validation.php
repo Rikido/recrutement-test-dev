@@ -152,6 +152,9 @@ return [
         'annual_sales_3' => '売上高(前々々期)',
         'transaction_amount' => '掛取引金額',
         'months_of_term' => '返済期間月数',
+        'payment_month' => '入金対象月',
+        'amount' => '入金額',
+        'delay_flag' => '遅延フラグ',
     ],
 
 ];
