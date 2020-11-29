@@ -103,7 +103,7 @@ class TradesController extends Controller
 
         //clientsに反映
         $client->credit_score = $first_trade_score*0.5 + $second_trade_score*0.3 + $third_trade_score*0.2;
-        $client->credit_line = $client->capital_amount*0.1*0.3 + ($client->annual_sales_1*0.5 + $client->annual_sales_2*0.3 + $client->annual_sales_3*0.2)*0.4*0.3 + ($first_transaction_amount*0.5 + $second_transaction_amount*0.3 + $third_transaction_amount*0.2)*0.4;
+        $client->credit_line = ($client->capital_amount*0.1*0.3 + ($client->annual_sales_1*0.5 + $client->annual_sales_2*0.3 + $client->annual_sales_3*0.2)*0.4*0.3 + ($first_transaction_amount*0.5 + $second_transaction_amount*0.3 + $third_transaction_amount*0.2)*0.4)*$client->credit_score/100;
         $client->account_receivable_balance = $sum_transaction_balance;
         $client->save();
 
@@ -203,7 +203,7 @@ class TradesController extends Controller
 
         //加重平均を行い、credit_scoreに反映
         $client->credit_score = $first_trade_score*0.5 + $second_trade_score*0.3 + $third_trade_score*0.2;
-        $client->credit_line = $client->capital_amount*0.1*0.3 + ($client->annual_sales_1*0.5 + $client->annual_sales_2*0.3 + $client->annual_sales_3*0.2)*0.4*0.3 + ($first_transaction_amount*0.5 + $second_transaction_amount*0.3 + $third_transaction_amount*0.2)*0.4;
+        $client->credit_line = ($client->capital_amount*0.1*0.3 + ($client->annual_sales_1*0.5 + $client->annual_sales_2*0.3 + $client->annual_sales_3*0.2)*0.4*0.3 + ($first_transaction_amount*0.5 + $second_transaction_amount*0.3 + $third_transaction_amount*0.2)*0.4)*$client->credit_score/100;
         $client->account_receivable_balance = $sum_transaction_balance;
         $client->save();
 
