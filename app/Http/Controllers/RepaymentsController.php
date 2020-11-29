@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
 use App\Models\Repayment;
 use App\Models\Trade;
 use App\Models\Client;
@@ -41,16 +40,18 @@ class RepaymentsController extends Controller
 
       public function register($id, Request $request)
       {
+
+          $trade = Trade::find($id);
+          $client = Client::find($trade->client_id);
+          $must_be_amount = $trade->transaction_amount/$trade->months_of_term;
         
           $request->validate([
             'trade_id' => 'required',
             'payment_month' => 'required',
-            'amount' => 'required',
+            'amount' => "required|integer|same:{$must_be_amount}",
             'delay_flag' => 'required',
           ]);
 
-          $trade = Trade::find($id);
-          $client = Client::find($trade->client_id);
           
           $validator = Validator::make($request->all(), [
               'trade_id' => 'required',

@@ -37,8 +37,8 @@ class ClientsController extends Controller
     public function register(Request $request)
     {
         $request->validate([
-            'client_name' => 'required||unique:clients,client_name',
-            'capital_amount' => 'required||digits_between:1,10',
+            'client_name' => 'required|unique:clients,client_name',
+            'capital_amount' => 'required|digits_between:1,10',
             'annual_sales_1' => 'digits_between:1,13',
             'annual_sales_2' => 'digits_between:1,13',
             'annual_sales_3' => 'digits_between:1,13',
