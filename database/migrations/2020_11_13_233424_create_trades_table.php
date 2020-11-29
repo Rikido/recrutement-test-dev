@@ -16,6 +16,7 @@ class CreateTradesTable extends Migration
         Schema::create('trades', function (Blueprint $table) {
             $table->Increments('id');//シーケンスID
             $table->integer('transaction_amount');//取引額
+            $table->integer('transaction_balance');//未回収金額
             $table->integer('months_of_term');//返済期間月数
             $table->integer('client_id')->unsigned();//取引先id
             $table->foreign('client_id')->references('id')->on('clients');//取引先id

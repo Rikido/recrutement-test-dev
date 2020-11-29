@@ -16,9 +16,19 @@ class Trade extends Model
     {
         return $this->hasMany('App\Models\Repayment');
     }
+    
+    public static function boot()
+    {
+      parent::boot();
+  
+      static::deleting(function($trade_group) {
+        $trade_group->repayments()->delete();
+      });
+    }
 
     protected $fillable = [
         'transaction_amount',
+        'transaction_balance',
         'months_of_term',
         'client_id',
         'trade_score',
