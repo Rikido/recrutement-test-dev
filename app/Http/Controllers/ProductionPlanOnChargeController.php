@@ -12,9 +12,17 @@ use Carbon\Carbon;
 
 class ProductionPlanOnChargeController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $keyword = $request->input('keyword');
+        if(!empty($keyword))
+        {
+          $test = ProductionPlanOnCharge::where('start_date_of_week',$request->keyword);
+          return redirect (route('production_plan_on_charge.past_plan_act', [ 'keyword' => $request->keyword ]));
+
+        }
         $product_items = ProductItem::paginate(5);
+
         $mon1 = date('Y-m-d',strtotime('last monday' ));
         $mon2 = date('Y-m-d',strtotime('next monday'));
         $mon3 = date('Y-m-d',strtotime('next monday + 1week'));
@@ -22,7 +30,7 @@ class ProductionPlanOnChargeController extends Controller
 
         $mondays = [$mon1,$mon2,$mon3,$mon4];
 
-        return view('production_plan_on_charge.index',['product_items' => $product_items, "mondays" => $mondays ]);
+        return view('production_plan_on_charge.index',['product_items' => $product_items, "mondays" => $mondays, "keyword" => $keyword ]);
     }
 
     public function create($id)
@@ -93,5 +101,13 @@ class ProductionPlanOnChargeController extends Controller
         $ProductionPlanOnCharge->update($input);
         \Session::flash('flash_message', '予定を更新しました');
         return redirect (route('production_plan_on_charge.index'));
+    }
+
+    public function past_plan_act(Request $request)
+    {
+        $keyword = $request->input('keyword');
+        $product_items = ProductItem::paginate(5);
+        $mon = $request->keyword;
+        return view('production_plan_on_charge.past_plan_act',['product_items' => $product_items, 'mon' => $mon, 'keyword' => $keyword]);
     }
 }

@@ -2,7 +2,16 @@
 @section('content')
 
 <div class="container">
-<h2>実績 / 予定</h2>
+  <div class="row">
+    <h2>実績 / 予定</h2>
+    <div class="col-sm-4" style="padding:20px 0; padding-left:0px;">
+      <form class="form-inline" action="{{url('/')}}">
+        <label for="keyword" class="ml-4" >週検索(週開始日を入力してください)</label><br>
+        <input type="text" name="keyword" value="{{ $keyword }}" class="ml-4" placeholder="例)2020-11-30">
+        <input type="submit" value="検索" class="btn btn-info">
+      </form>
+      </div>
+  </div>
   <div class="row mt-3">
     <table class="table">
       <thead>

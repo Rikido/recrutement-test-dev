@@ -22,6 +22,7 @@ Route::group(['middleware' => 'auth'], function() {
   Route::delete('charge_can_work/{product_item_id}/{charge_id}', 'ChargeCanWorkController@destroy')->name('charge_can_work.destroy');
   Route::resource('charge_can_work', 'ChargeCanWorkController', ['only' => ['store']]);
 
+  Route::get('production_plan_on_charge/past_plan_act', 'ProductionPlanOnChargeController@past_plan_act')->name('production_plan_on_charge.past_plan_act');
   Route::get('production_plan_on_charge/create/{product_item_id}', 'ProductionPlanOnChargeController@create')->name('production_plan_on_charge.create');
   Route::get('production_plan_on_charge/edit/{product_item_id}/{charge_id}/{week}', 'ProductionPlanOnChargeController@edit')->name('production_plan_on_charge.edit');
   Route::resource('production_plan_on_charge', 'ProductionPlanOnChargeController', ['only' => ['index','store','update']]);
