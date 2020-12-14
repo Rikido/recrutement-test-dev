@@ -27,23 +27,24 @@
                 <a href="{{ url('/') }}">
                     <p class="sidebar-title">{{ config('app.name', 'Laravel') }}</h4>
                 </a>
-                
-                <p class="sidebar-menu-title">MENU</p>            
+
+                <p class="sidebar-menu-title">MENU</p>
                 <h4 class="sidebar-menu"><a href="{{route('item.index')}}">部材一覧</a></h4>
                 <h4 class="sidebar-menu"><a href="{{route('purchase.index')}}">発注一覧</a></h4>
                 <h4 class="sidebar-menu"><a href="{{route('receipt.index')}}">入庫一覧</a></h4>
                 <h4 class="sidebar-menu"><a href="{{route('allocate.index')}}">割当一覧</a></h4>
                 <h4 class="sidebar-menu"><a href="{{route('item.create')}}">部材新規登録</a></h4>
+                <h4 class="sidebar-menu"><a href="{{route('user.index')}}">社員一覧</a></h4>
                 @guest
-                    <h4 class="sidebar-menu">                           
+                    <h4 class="sidebar-menu">
                         <a href="{{ route('login') }}">{{ __('ログイン') }}</a>
                     </h4>
                     @if (Route::has('register'))
                         <h4 class="sidebar-menu">
                             <a href="{{ route('register') }}">{{ __('新規登録') }}</a>
-                        </h4>   
+                        </h4>
                     @endif
-                @else                               
+                @else
                     <p class="user-name">{{ Auth::user()->name }}</p>
                     <a href="{{ route('logout') }}"
                         onclick="event.preventDefault();
@@ -52,15 +53,15 @@
                     </a>
                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                         @csrf
-                    </form>                     
-                @endguest        
+                    </form>
+                @endguest
             </div>
         </div>
         <main>
             <div class="container main-content">
                 <div class="row">
-                
-                        
+
+
                     <div class="col-md-12">
                         <!-- エラーメッセージ・フラッシュメッセージ -->
                         @if (Session::has('message'))

@@ -6,6 +6,7 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">部材一覧</div>
+
                 <div class="card-body">
                     <table class="table">
                         <thead>
@@ -51,7 +52,7 @@
                                         @foreach($item->allocates as $allocate)
                                             <?php $total_num4 = $total_num4 + $allocate->num ?>
                                         @endforeach
-                                        {{ $total_num4 }}                                      
+                                        {{ $total_num4 }}
                                         <p><a href="{{ route('allocate.create', ['id' => $item->id]) }}">割当</a></p>
                                     </td>
                                     <td>
