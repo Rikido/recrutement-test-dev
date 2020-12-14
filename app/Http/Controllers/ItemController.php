@@ -20,7 +20,6 @@ class ItemController extends Controller
 
         $items = Item::paginate(5);
 
-        
         return view('items.index', compact('items'));
     }
 
@@ -33,10 +32,10 @@ class ItemController extends Controller
 
         $item->item_name = $request->input('item_name');
 
-        
+
         $item->save();
-        
+
         return redirect('/')->with('message', '部材を登録しました。');
-    
+
     }
 }
