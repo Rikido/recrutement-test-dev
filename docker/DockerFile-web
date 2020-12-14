@@ -34,7 +34,7 @@ RUN yum -y install MariaDB-server MariaDB-client
 RUN chmod -R 777 /var/log/mysql
 
 RUN yum -y install http://rpms.famillecollet.com/enterprise/remi-release-7.rpm
-RUN yum -y install --enablerepo=remi-php72 php php-common php-opcache php-mbstring php-xdebug php-mysql php-mysqlnd php-zip php-pdo php-cli php-devel php-pear php-xml php-gd php-fpm
+RUN yum -y install --enablerepo=remi-php73 php php-common php-opcache php-mbstring php-xdebug php-mysql php-mysqlnd php-zip php-pdo php-cli php-devel php-pear php-xml php-gd php-fpm
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
 RUN php composer-setup.php
 RUN php -r "unlink('composer-setup.php');"
