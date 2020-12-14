@@ -28,6 +28,10 @@ Route::group(['prefix' => 'contact', 'middleware' => 'auth'], function(){
     Route::get('allocate/index', 'AllocateController@index')->name('allocate.index');
     Route::get('allocate/create/{id}', 'AllocateController@create')->name('allocate.create');
     Route::post('allocate/store', 'AllocateController@store')->name('allocate.store');
+
+    Route::get('user/index', 'UserController@index')->name('user.index');
+    Route::get('user/edit/{id}', 'UserController@edit')->name('user.edit');
+    Route::patch('user/edit/{id}', 'UserController@update')->name('user.update');
 });
 
 Auth::routes();
