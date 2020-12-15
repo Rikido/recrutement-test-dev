@@ -35,6 +35,7 @@
                 <h4 class="sidebar-menu"><a href="{{route('allocate.index')}}">割当一覧</a></h4>
                 <h4 class="sidebar-menu"><a href="{{route('item.create')}}">部材新規登録</a></h4>
                 <h4 class="sidebar-menu"><a href="{{route('user.index')}}">社員一覧</a></h4>
+                <h4 class="sidebar-menu"><a href="{{route('user.create', ['id' => Auth::user()->id])}}">社員登録・編集画面</a></h4>
                 @guest
                     <h4 class="sidebar-menu">
                         <a href="{{ route('login') }}">{{ __('ログイン') }}</a>
