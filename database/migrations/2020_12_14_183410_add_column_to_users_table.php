@@ -15,10 +15,10 @@ class AddColumnToUsersTable extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->string('employee_code')->unique();
-            $table->string('employee_name');
+            $table->string('employee_name')->nullable();
             $table->date('employment_date')->nullable();
             $table->date('birth_day')->nullable();
-            $table->integer('paid_holidays_count');
+            $table->integer('paid_holidays_count')->nullable();
         });
     }
 

@@ -31,13 +31,20 @@
     										{{$user->employment_date}}
                                         </td>
                                         <td>
-    										{{$user->birth_day}}
+                                        <?php
+                                            $currentDate = date('Y/m/d');
+                                            $birthday = $user->birth_day;
+                                            $c = (int)date('Ymd', strtotime($currentDate));
+                                            $b = (int)date('Ymd', strtotime($birthday));
+                                            $age = (int)(($c - $b) / 10000);
+                                            echo $age;
+                                        ?>
                                         </td>
                                         <td>
-
+											{{$user->created_at}}
                                         </td>
                                         <td>
-
+											{{$user->updated_at}}
                                         </td>
                                     </tr>
                                   @endforeach

@@ -31,7 +31,7 @@ Route::group(['prefix' => 'contact', 'middleware' => 'auth'], function(){
 
     Route::get('user/index', 'UserController@index')->name('user.index');
     Route::get('user/create/{id}', 'UserController@create')->name('user.create');
-    Route::post('user/store', 'UserController@store')->name('user.store');
+    Route::post('user/store/{id}', 'UserController@store')->name('user.store');
 });
 
 Auth::routes();
