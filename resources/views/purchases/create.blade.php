@@ -13,7 +13,7 @@
                         <tbody>
                             <tr>
                                 <th>{{ $item->item_name }}</th>
-                                <td><input type="number" name="num" style="width:70%;" min="1" max="1000"　class="form-control"></td>
+                                <td><input type="number" name="num" style="width:70%;" min="1" max="1000" class="form-control"></td>
                             </tr>
                         </tbody>
                     </table>

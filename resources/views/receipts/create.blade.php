@@ -12,13 +12,13 @@
                     <table class="table">
                         <tbody>
                             <tr>
-                                <td>{{ $item->item_name }}</th>
+                                <td>{{ $item->item_name }}</td>
                                 <td><input type="number" name="num" min="1" max="1000" class="form-control"></td>
                                 <td>入庫可能個数　{{ $num }} 個</td>
                             </tr>
                         </tbody>
                     </table>
-                    @if ($num <= 0) 
+                    @if ($num <= 0)
                         <p class="num-alert" style="color: red; text-align: center;">※入庫可能個数がありません</p>
                     @endif
                     <input type="hidden" name="item_id" value="{{ $item->id }}">
@@ -48,7 +48,7 @@
                                     <td>{{ $receipt->num }} 個</td>
                                 </tr>
                             @endforeach
-                        </tbody>    
+                        </tbody>
                     </table>
                 </div>
             </div>

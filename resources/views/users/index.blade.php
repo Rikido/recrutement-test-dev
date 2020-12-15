@@ -20,12 +20,11 @@
                             <tbody>
     							 @foreach($users as $user)
                                     <tr>
-
                                         <td>
     										{{$user->employee_code}}
                                         </td>
                                         <td>
-    										{{$user->name}}
+    										{{$user->employee_name}}
                                         </td>
                                         <td>
     										{{$user->employment_date}}
@@ -36,8 +35,13 @@
                                             $birthday = $user->birth_day;
                                             $c = (int)date('Ymd', strtotime($currentDate));
                                             $b = (int)date('Ymd', strtotime($birthday));
-                                            $age = (int)(($c - $b) / 10000);
-                                            echo $age;
+                                            if($birthday == null){
+                                                echo "未設定";
+                                            }else{
+                                                $age = (int)(($c - $b) / 10000);
+                                                echo $age;
+                                            }
+
                                         ?>
                                         </td>
                                         <td>
@@ -52,6 +56,7 @@
                         </table>
                    </div>
                </div>
+              <div class="mx-auto" style="width: 100px;">{{ $users->links() }}</div>
 		</div>
 	</div>
 </div>

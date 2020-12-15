@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,9 +14,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::all();
-
-
+        $users = User::paginate(5);
 
         return view('users.index', compact('users'));
     }
@@ -42,15 +39,25 @@ class UserController extends Controller
     public function store(Request $request, $id)
     {
         $user = User::find($id);
+            //初めて登録するときの処理（登録日時保存）
+            if($user->employee_code == null){
+                $now = date("Y-m-d H:i:s");
+                $user->employee_code = $request->input('employee_code');
+                $user->employee_name = $request->input('employee_name');
+                $user->employment_date = $request->input('employment_date');
+                $user->birth_day = $request->input('birth_day');
+                $user->created_at = $now;
+                $user->save();
+                return back()->with('message', '社員情報を登録しました。');
+            }else{
+                $user->employee_code = $request->input('employee_code');
+                $user->employee_name = $request->input('employee_name');
+                $user->employment_date = $request->input('employment_date');
+                $user->birth_day = $request->input('birth_day');
+                $user->save();
+                return back()->with('message', '社員情報を更新しました。');
+            }
 
-        $user->employee_code = $request->input('employee_code');
-        $user->employee_name = $request->input('employee_name');
-        $user->employment_date = $request->input('employment_date');
-        $user->birth_day = $request->input('birth_day');
-
-        $user->save();
-
-        return back()->with('message', '社員情報を更新しました。');
     }
 
     /**

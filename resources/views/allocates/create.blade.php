@@ -28,7 +28,7 @@
                             </tr>
                         </tbody>
                     </table>
-                    @if ($num <= 0) 
+                    @if ($num <= 0)
                         <p class="num-alert" style="color: red; text-align: center;">※割当可能個数がありません</p>
                     @endif
                     <input type="hidden" name="item_id" value="{{ $item->id }}">
@@ -66,6 +66,7 @@
                 </div>
             </div>
         </div>
+    </div>
     </div>
 </div>
 

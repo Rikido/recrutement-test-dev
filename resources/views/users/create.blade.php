@@ -19,7 +19,7 @@
                             </div>
                             <div class="form-group">
                             	入社年月日<br>
-                            	<input type="date" name="employment_date" value="{{ $user->employee_date }}">
+                            	<input type="date" name="employment_date" value="{{ $user->employment_date }}">
                             </div>
                             <div class="form-group">
                             	生年月日<br>
@@ -33,7 +33,7 @@
                             	パスワード<br>
                             	{{ $user->password }}
                             </div>
-                            <input class="btn btn-success", type="submit" value="送信">
+                            <input class="btn btn-success" type="submit" value="送信">
                          </form>
 
                     </div>
