@@ -46,6 +46,7 @@ class UserController extends Controller
                 $user->employee_name = $request->input('employee_name');
                 $user->employment_date = $request->input('employment_date');
                 $user->birth_day = $request->input('birth_day');
+                $user->email = $request->input('email');
                 $user->created_at = $now;
                 $user->save();
                 return back()->with('message', '社員情報を登録しました。');
@@ -54,6 +55,7 @@ class UserController extends Controller
                 $user->employee_name = $request->input('employee_name');
                 $user->employment_date = $request->input('employment_date');
                 $user->birth_day = $request->input('birth_day');
+                $user->email = $request->input('email');
                 $user->save();
                 return back()->with('message', '社員情報を更新しました。');
             }

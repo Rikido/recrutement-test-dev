@@ -27,7 +27,7 @@
                             </div>
                             <div class="form-group">
                             	Email<br>
-                            	{{ $user->email }}
+                            	<input type="text" name="email" value="{{ $user->email }}">
                             </div>
                             <div class="form-group">
                             	パスワード<br>
