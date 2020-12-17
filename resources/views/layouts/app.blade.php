@@ -39,6 +39,11 @@
                 	<h4 class="sidebar-menu">
                 		<a href="{{route('user.create', ['id' => Auth::user()->id])}}">社員登録・編集画面</a>
                 	</h4>
+                	<h4 class="sidebar-menu">
+                		<a href="{{route('attendance.create', ['id' => Auth::user()->id])}}">
+                			月次の勤怠実績一覧登録・編集画面
+                		</a>
+                	</h4>
                 @endauth
                 @guest
                     <h4 class="sidebar-menu">

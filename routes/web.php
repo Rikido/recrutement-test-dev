@@ -32,6 +32,11 @@ Route::group(['prefix' => 'contact', 'middleware' => 'auth'], function(){
     Route::get('user/index', 'UserController@index')->name('user.index');
     Route::get('user/create/{id}', 'UserController@create')->name('user.create');
     Route::post('user/store/{id}', 'UserController@store')->name('user.store');
+
+    Route::get('attendance/create/{id}/', 'AttendanceController@create')->name('attendance.create');
+    Route::get('attendance/before/create/{id}/{n}', 'AttendanceController@beforeCreate')->name('attendance.create.before');
+    Route::get('attendance/after/create/{id}/{n}', 'AttendanceController@afterCreate')->name('attendance.create.after');
+    Route::post('attendance/store/{id}', 'AttendanceController@store')->name('attendance.store');
 });
 
 Auth::routes();
