@@ -74,6 +74,7 @@
 
         <main class="py-4">
             @yield('content')
+            @yield('group_index')
         </main>
     </div>
 </body>
