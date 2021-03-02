@@ -117,7 +117,6 @@ The Laravel framework is open-source software licensed under the [MIT license](h
 | ------------- | ------- | -------------- |
 | resource_name | string  | null: false    |
 | resource_type | boolean | default: false |
-| resource_size | integer | default: none  |
 
 ### Association
 - has_many :resource_stocks
