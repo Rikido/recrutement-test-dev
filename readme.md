@@ -113,11 +113,11 @@ The Laravel framework is open-source software licensed under the [MIT license](h
 
 ## resources
 
-| Column        | Type    | Options           |
-| ------------- | ------- | ----------------- |
-| resource_name | string  | foreign_key: true |
-| resource_type | boolean | default: false    |
-| resource_size | integer | default: none     |
+| Column        | Type    | Options        |
+| ------------- | ------- | -------------- |
+| resource_name | string  | null: false    |
+| resource_type | boolean | default: false |
+| resource_size | integer | default: none  |
 
 ### Association
 - has_many :resource_stocks
@@ -215,7 +215,7 @@ The Laravel framework is open-source software licensed under the [MIT license](h
 | project              | references | foreign_key: true |
 | resource             | references | foreign_key: true |
 | location             | references | foreign_key: true |
-| consumption_quantity | integer    | null: false       |
+| consumption_quantity | integer    |                   |
 
 ### Association
 - belongs_to :project
