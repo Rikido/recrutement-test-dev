@@ -69,3 +69,170 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-source software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+
+# Table
+
+## users
+
+| Column   | Type   | Options                   |
+| -------- | ------ | ------------------------- |
+| name     | string | null: false               |
+| email    | string | null: false, unique: true |
+| password | string | null: false               |
+
+### Association
+- has_many :group_users
+- has_many :task_charges
+- has_many :user_work_schedules
+- has_many :vehicle_work_schedules
+
+
+## groups
+
+| Column     | Type   | Options     |
+| ---------- | ------ | ----------- |
+| group_name | string | null: false |
+
+### Association
+- has_many :group_users
+- belongs_to :project
+
+
+## group_users
+
+| Column | Type       | Options           |
+| ------ | ---------- | ----------------- |
+| group  | references | foreign_key: true |
+| user   | references | foreign_key: true |
+
+### Association
+- belongs_to :user
+- belongs_to :group
+
+
+## resources
+
+| Column        | Type    | Options           |
+| ------------- | ------- | ----------------- |
+| resource_name | string  | foreign_key: true |
+| resource_type | boolean | default: false    |
+| resource_size | integer | default: none     |
+
+### Association
+- has_many :resource_stocks
+- belongs_to :project_resource
+
+
+## locations
+
+| Column        | Type   | Options     |
+| ------------- | ------ | ----------- |
+| location_name | string | null: false |
+
+### Association
+- has_many :resource_stocks
+- has_many :project_resources
+
+
+## vehicles
+
+| Column     | Type    | Options     |
+| ---------- |-------- | ----------- |
+| max_weight | integer | null: false |
+| max_size   | integer | null: false |
+
+### Association
+- has_many :vehicle_work_schedules
+
+
+## resource_stocks
+
+| Column   | Type       | Options           |
+| -------- | ---------- | ----------------- |
+| location | references | foreign_key: true |
+| resource | references | foreign_key: true |
+| stock    | integer    | null: false       |
+| weight   | integer    | null: false       |
+| size     | integer    | null: false       |
+
+### Association
+- belongs_to :location
+- belongs_to :resource
+
+
+## projects
+
+| Column       | Type       | Options           |
+| ------------ | ---------- | ----------------- |
+| project_name | string     | null: false       |
+| group        | references | foreign_key: true |
+| outline      | text       | null: false       |
+| file_path    | string     | null: false       |
+
+### Association
+- has_many :groups
+- has_many :task_charges
+- has_many :user_work_schedules
+- has_many :project_resources
+- has_many :vehicle_work_schedules
+
+
+## task_charges
+
+| Column      | Type       | Options           |
+| ----------- | ---------- | ----------------- |
+| project     | references | foreign_key: true |
+| task_name   | string     | null: false       |
+| user        | references | foreign_key: true |
+| outline     | text       | null: false       |
+| order       | integer    | null: false       |
+| report      | text       |                   |
+| reported_at | date       |                   |
+
+### Association
+- belongs_to :user
+- belongs_to :project
+
+
+## user_work_schedules
+
+| Column    | Type       | Options           |
+| --------- | ---------- | ----------------- |
+| project   | references | foreign_key: true |
+| user      | references | foreign_key: true |
+| work_date | date       | null: false       |
+
+### Association
+- belongs_to :user
+- belongs_to :project
+
+
+## project_resources
+
+| Column               | Type       | Options           |
+| -------------------- | ---------- | ----------------- |
+| project              | references | foreign_key: true |
+| resource             | references | foreign_key: true |
+| location             | references | foreign_key: true |
+| consumption_quantity | integer    | null: false       |
+
+### Association
+- belongs_to :project
+- belongs_to :resource
+- belongs_to :location
+
+
+## vehicle_work_schedules
+
+| Column    | Type       | Options           |
+| --------- | ---------- | ----------------- |
+| project   | references | foreign_key: true |
+| user      | references | foreign_key: true |
+| vehicle   | references | foreign_key: true |
+| work_date | date       | null: false       |
+
+### Association
+- belongs_to :user
+- belongs_to :vehicle
+- belongs_to :project
