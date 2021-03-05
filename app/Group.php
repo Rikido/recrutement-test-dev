@@ -13,4 +13,12 @@ class Group extends Model
     {
         return $this->belongsToMany('App\User', 'group_users')->withTimestamps();
     }
+
+    /**
+     *  Projectモデルにリレーションを設定
+     */
+    public function projects()
+    {
+        return $this->hasMany('App\Project');
+    }
 }
