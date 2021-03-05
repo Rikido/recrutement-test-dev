@@ -96,7 +96,7 @@ The Laravel framework is open-source software licensed under the [MIT license](h
 
 ### Association
 - has_many :group_users
-- belongs_to :project
+- has_many :projects
 
 
 ## group_users
@@ -170,11 +170,11 @@ The Laravel framework is open-source software licensed under the [MIT license](h
 | file_path    | string     | null: false       |
 
 ### Association
-- has_many :groups
 - has_many :task_charges
 - has_many :user_work_schedules
 - has_many :project_resources
 - has_many :vehicle_work_schedules
+- belongs_to :group
 
 
 ## task_charges
