@@ -11,6 +11,6 @@ class Resource extends Model
      */
     public function resource_stocks()
     {
-        return $this_>hasMany('App\Resource_stock');
+        return $this->hasMany('App\Resource_stock');
     }
 }
