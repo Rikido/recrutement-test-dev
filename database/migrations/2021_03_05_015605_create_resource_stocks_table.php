@@ -15,12 +15,15 @@ class CreateResourceStocksTable extends Migration
     {
         Schema::create('resource_stocks', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->foreign('location_id')->reference('id')->on('locations');
-            $table->foreign('resource_id')->reference('id')->on('resources');
+            $table->unsignedBigInteger('location_id');
+            $table->unsignedBigInteger('resource_id');
             $table->integer('stock');
             $table->integer('weight');
             $table->integer('size');
             $table->timestamps();
+
+            $table->foreign('location_id')->references('id')->on('locations');
+            $table->foreign('resource_id')->references('id')->on('resources');
         });
     }
 

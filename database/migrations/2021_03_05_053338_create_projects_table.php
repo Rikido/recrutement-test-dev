@@ -15,11 +15,13 @@ class CreateProjectsTable extends Migration
     {
         Schema::create('projects', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->sting('project_name');
-            $table->foreign('group_id')->reference('id')->on('groups');
+            $table->string('project_name');
+            $table->unsignedBigInteger('group_id');
             $table->text('outline');
             $table->string('file_path');
             $table->timestamps();
+
+            $table->foreign('group_id')->references('id')->on('groups');
         });
     }
 
