@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Project;
 use Illuminate\Http\Request;
+use App\Http\Requests\CreateProject;
 use Illuminate\Support\Facades\Auth;
 use Validator;
 use Illuminate\Support\Facades\Storage;
@@ -15,6 +16,7 @@ class ProjectsController extends Controller
         $this->middleware('auth');
     }
 
+    // projectのカラムを設定
     private $projectInput = ['project_name', 'group', 'outline'];
 
     // projectsの一覧取得
@@ -24,6 +26,13 @@ class ProjectsController extends Controller
         $projects = Project::all();
 
         return view('projects.index', [ 'projects' => $projects ]);
+    }
+
+    // project詳細画面の表示
+    public function show($id)
+    {
+        $project = Project::findOrFail($id);
+        return view('projects.show', [ 'project' => $project ]);
     }
 
     // project作成フォームの表示
@@ -36,17 +45,8 @@ class ProjectsController extends Controller
     }
 
     // セッションに入力値を保存
-    public function createStore(Request $request)
+    public function createStore(CreateProject $request)
     {
-        
-        // 送信された値にバリデーションを実行
-        $validatedData = $request->validate([
-            'project_name' => 'required|string|max:100',
-            'group'        => 'required|integer',
-            'outline'      => 'required|string|max:500',
-            'file_path'    => 'required|mimes:pdf',
-        ]);
-
         $input = $request->only($this->projectInput);
         $path = $request->file('file_path')->store('public/project_pdf');
         $request->session()->put(["projectInfo" => $input, "projectPdf" => $path]);
