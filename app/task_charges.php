@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class task_charges extends Model
+class Task_charges extends Model
 {
     /**
      * このtask_chargeを所有するuserを取得
@@ -19,6 +19,6 @@ class task_charges extends Model
      */
     public function project()
     {
-        return $this->belongsTo('App\project');
+        return $this->belongsTo('App\Project');
     }
 }

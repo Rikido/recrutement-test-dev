@@ -19,6 +19,30 @@ class User extends Authenticatable
     }
 
     /**
+     * user_work_schedulesモデルにリレーションを設定
+     */
+    public function user_work_schedules()
+    {
+        return $this->hasMany('App\User_work_schedule');
+    }
+
+    /**
+     * vehicle_work_schedulesモデルにリレーションを設定
+     */
+    public function vehicle_work_schedules()
+    {
+        return $this->hasMany('App\Vehicle_work_schedule');
+    }
+
+    /**
+     * task_chargesモデルにリレーションを設定
+     */
+    public function task_charges()
+    {
+        return $this->hasMany('App\Task_charge');
+    }
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array

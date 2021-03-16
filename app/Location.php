@@ -13,4 +13,12 @@ class Location extends Model
     {
         return $this->hasMany('App\Resource_stock');
     }
+
+    /**
+     *  Project_resourceモデルにリレーションの設定
+     */
+    public function project_resources()
+    {
+        return $this->hasMany('App\Project_resource');
+    }
 }
