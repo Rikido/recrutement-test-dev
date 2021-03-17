@@ -9,7 +9,7 @@
     </tr>
     @foreach ($projects as $project)
       <tr>
-        <td>{{ $project->project_name }}</td>
+        <td><a href="{{ url('project', $project->id) }}">{{ $project->project_name }}</a></td>
         <td>{{ $project->group->group_name }}</td>
         <td>{{ $project->outline }}<td>
       </tr>
