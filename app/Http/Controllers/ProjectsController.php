@@ -23,7 +23,7 @@ class ProjectsController extends Controller
     public function index()
     {
         // projectsの一覧と関連したgroupsの取得
-        $projects = Project::all();
+        $projects = Project::with('group')->get();
 
         return view('projects.index', [ 'projects' => $projects ]);
     }
@@ -44,7 +44,7 @@ class ProjectsController extends Controller
         return view('projects.create', ['auth_user_groups' => $auth_user_groups]);
     }
 
-    // セッションに入力値を保存
+    // バリデーションの実行とセッションに入力値を保存
     public function createStore(CreateProject $request)
     {
         $input = $request->only($this->projectInput);
@@ -72,7 +72,7 @@ class ProjectsController extends Controller
     // セッションの値をデータベースに保存する
     public function confirmStore(Request $request)
     {
-        // セッションから値を取り出す
+        // リクエストから値を取り出す
         $input = $request->session()->get("projectInfo");
         $path = $request->session()->get("projectPdf");
 
