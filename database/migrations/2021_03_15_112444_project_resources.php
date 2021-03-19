@@ -17,7 +17,7 @@ class ProjectResources extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('project_id');
             $table->unsignedBigInteger('resource_id');
-            $table->unsignedBigInteger('location_id');
+            $table->unsignedBigInteger('location_id')->nullable();
             $table->integer('consumption_quantity');
             $table->timestamps();
 
