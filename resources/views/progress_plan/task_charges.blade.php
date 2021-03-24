@@ -12,11 +12,11 @@
     </div>
   @endif
 
-  <form action="/project/{{ $project->id }}/task_charges/create" method="post">
+  <form action="/project/{{ $project->id }}/progress_plan/location_select" method="post">
     @csrf
 
     @for($i = 0 ; $i < 20; $i ++)
-      <label for="task_charge[{{ $i }}][task_name]">担当項目名</label>
+      <label for="task_charge[{{ $i }}][task_name]">{{ $i + 1 }}:担当項目名</label>
       <input name="task_charge[{{ $i }}][task_name]" value="{{ old("task_charge.$i.task_name") }}"></br>
 
       <label for="task_charge[{{ $i }}][user]">担当ユーザー</label>
@@ -35,7 +35,7 @@
     @endfor
       <input type="hidden" name="project_id" value="{{ $project->id }}">
 
-      <input type="submit" name="back" value="戻る">
-      <input type="submit" value="登録">
+      <a href="javascript:history.back();">戻る</a>
+      <input type="submit" value="次の画面へ">
   </form>
 </div>

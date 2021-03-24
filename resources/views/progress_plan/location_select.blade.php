@@ -28,7 +28,7 @@
 
   <h2>積み込み数選択</h2>
 
-  <form action="/project/{{ $project->id }}/task_charges/project_resources/locationSelect" method="post">
+  <form action="/project/{{ $project->id }}/progress_plan/vehicle_select" method="post">
     @csrf
       <p>拠点名:{{ $project_resource_stocks[0]->location->location_name }}</p>
       <p>資材名:{{ $project_resource_stocks[0]->resource->resource_name }}</p>
@@ -36,7 +36,7 @@
       <label name="consumption_quantity" >積み込み数</label>
       <input name="consumption_quantity" value="{{ isset($system_suggest_load) ? $system_suggest_load : old('consumption_quantity')}}"></br>
     
-      <input type="submit" name="back" value="戻る">
+      <a href="javascript:history.back();">戻る</a>
       <input type="submit" value="進行計画登録画面へ">
   </form>
 <div>
