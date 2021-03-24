@@ -20,6 +20,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/groups', 'GroupsController@index');
 
 Route::get('/projects', 'ProjectsController@index');
+Route::get('/project/{id}', 'ProjectsController@show');
 
 Route::get('/projects/create', 'ProjectsController@create');
 Route::post('/projects/create', 'ProjectsController@createStore');
@@ -28,3 +29,11 @@ Route::get('/projects/confirm', 'ProjectsController@confirm');
 Route::post('/projects/confirm', 'ProjectsController@confirmStore');
 
 Route::get('/projects/done', 'ProjectsController@done');
+
+Route::get('/project/{id}/progress_plan/resource_select', 'ProgressPlansController@resourceSelect');
+Route::post('/project/{id}/progress_plan/task_charges', 'ProgressPlansController@taskCharges');
+Route::post('/project/{id}/progress_plan/location_select', 'ProgressPlansController@locationSelect');
+Route::post('/project/{id}/progress_plan/vehicle_select', 'ProgressPlansController@vehicleSelect');
+Route::post('/project/{id}/progress_plan/work_schedule', 'ProgressPlansController@workSchedule');
+Route::post('/project/{id}/progress_plan/confirm', 'ProgressPlansController@confirm');
+Route::post('/project/{id}/progress_plan/store', 'ProgressPlansController@store');
