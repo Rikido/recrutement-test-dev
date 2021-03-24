@@ -26,6 +26,13 @@ class CreateProjectResources extends FormRequest
         return [
             'project_resource.*.resource' => 'required_with:project_resource.*.resource,project_resource.*.consumption_quantity|nullable|integer',
             'project_resource.*.consumption_quantity' => 'required_with:project_resource.*.resource,project_resource.*.consumption_quantity|nullable|integer',
+
+            'project_resource' => 
+                function ($attribute, $value, $fail) {
+                    if ($value[0]["resource"] == "") {
+                        return $fail("利用資材1は入力してください");
+                    }
+                }
         ];
     }
 }

@@ -28,6 +28,13 @@ class CreateTaskCharges extends FormRequest
             'task_charge.*.user' => 'required_with:task_charge.*.task_name,task_charge.*.outline,task_charge.*.order|nullable|integer',
             'task_charge.*.outline' => 'required_with:task_charge.*.task_name,task_charge.*.user,task_charge.*.order|nullable|string',
             'task_charge.*.order' => 'required_with:task_charge.*.task_name,task_charge.*.user,task_charge.*.outline|nullable|integer',
+
+            'task_charge' =>
+                function ($attribute, $value, $fail) {
+                    if ($value[0]["task_name"] == "") {
+                        return $fail("1:担当項目は入力してください");
+                    }
+                }
         ];
     }
 }
