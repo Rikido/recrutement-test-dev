@@ -21,7 +21,7 @@ class CreateTaskChargesTable extends Migration
             $table->text('outline');
             $table->integer('order');
             $table->text('report')->nullable();
-            $table->date('reported_at');
+            $table->date('reported_at')->nullable();
             $table->timestamps();
 
             $table->foreign('project_id')->references('id')->on('projects');
