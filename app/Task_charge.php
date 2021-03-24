@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Task_charges extends Model
+class Task_charge extends Model
 {
     /**
      * このtask_chargeを所有するuserを取得

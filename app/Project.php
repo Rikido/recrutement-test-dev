@@ -15,6 +15,14 @@ class Project extends Model
     }
 
     /**
+     * Project_resourceモデルにリレーションを設定
+     */
+    public function project_resources()
+    {
+        return $this->hasMany('App\Project_resource');
+    }
+
+    /**
      * Task_chargeモデルにリレーションを設定
      */
     public function task_charges()

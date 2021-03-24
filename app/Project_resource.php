@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Project_resources extends Model
+class Project_resource extends Model
 {
     /**
      * Project_resourceを所有するprojectを取得する
