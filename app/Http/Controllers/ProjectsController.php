@@ -30,8 +30,8 @@ class ProjectsController extends Controller
     // project詳細画面の表示
     public function show($id)
     {
-        $project = Project::findOrFail($id);
-        return view('projects.show', [ 'project' => $project ]);
+        $project = Project::with('task_charges', 'project_resources')->find($id);
+        return view('projects.show', compact('project'));
     }
 
     // project作成フォームの表示
