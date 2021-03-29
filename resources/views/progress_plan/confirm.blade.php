@@ -11,10 +11,12 @@
     <h4>担当ユーザー:{{ $task_charge["user"] }}</h4>
     <h4>実行順序:{{ $task_charge["order"] }}
   @endforeach
-  <h2>資材積込み拠点</h2>
-  <h3>拠点名:{{ $project_resource_stocks["location"]->location_name}}</h3>
-  <h3>資材名:{{ $project_resource_stocks["resource"]->resource_name }}</h3>
-  <h3>積み込み数:{{ $consumption_quantity }}</h3>
+  @if(!empty($project_resource_stocks))
+    <h2>資材積込み拠点</h2>
+    <h3>拠点名:{{ $project_resource_stocks["location"]->location_name}}</h3>
+    <h3>資材名:{{ $project_resource_stocks["resource"]->resource_name }}</h3>
+    <h3>積み込み数:{{ $consumption_quantity }}</h3>
+  @endif
 
   <h2>工事実施可能日程</h2>
   <h2>{{ $work_date }}</h2>
