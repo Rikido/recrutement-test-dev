@@ -148,13 +148,12 @@ class ProgressPlansController extends Controller
         $vehicle_work_schedules = Vehicle_work_schedule::where('vehicle_id', $vehicle_id)
             ->where('work_date', '>', $now_date)
             ->orderBy('work_date')->get()->toArray();
-
         if(empty($user_work_schedules)){
             $work_date = date('Y-m-d', strtotime('+1 day'));
         } else {
             $i = 1;
             while(true){
-                $work_date = date('Y-m-d', strtotime("+2 day"));
+                $work_date = date('Y-m-d', strtotime("+{$i} day"));
                 $search_user_work = array_search( $work_date, array_column( $user_work_schedules, 'work_date'));
                 if(!$search_user_work){
                     $search_vehicle_work = array_search( $work_date, array_column( $vehicle_work_schedules, 'work_date'));
@@ -167,7 +166,6 @@ class ProgressPlansController extends Controller
                 $i += 1; 
             }
         }
-
         return view('progress_plan.work_date', compact('project', 'task_charges', 'project_resource_stocks', 'consumption_quantity', 'work_date'));
     }
 
@@ -203,7 +201,7 @@ class ProgressPlansController extends Controller
         // sessionからconsumption_quantity情報を取得する
         $consumption_quantity = $request->session()->get('consumption_quantity');
         // sessionからresource_large情報を取得する
-        $resource_large = $request->session()->get('resource_large');
+        $resource_large = $request->session()->get('resource_large') ?? [];
         // sessionからproject_resource_stocks情報を取得する
         $project_resource_stocks = $request->session()->get('project_resource_stocks');
         
@@ -242,8 +240,8 @@ class ProgressPlansController extends Controller
         $vehicle_work_schedules->work_date = $work_date;
         $vehicle_work_schedules->save();
 
-        // 削除 (全データ)
-        session()->flush();
+        // 複数キーを削除
+        $request->session()->forget(['project', 'project_resources', 'task_charges', 'vehicle_id', 'work_date', 'consumption_quantity', 'resource_large', 'project_resource_stocks']);
 
         return view('progress_plan.complete');
     }
