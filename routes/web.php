@@ -34,6 +34,11 @@ Route::get('/project/{id}/progress_plan/resource_select', 'ProgressPlansControll
 Route::post('/project/{id}/progress_plan/task_charges', 'ProgressPlansController@taskCharges');
 Route::post('/project/{id}/progress_plan/location_select', 'ProgressPlansController@locationSelect');
 Route::post('/project/{id}/progress_plan/vehicle_select', 'ProgressPlansController@vehicleSelect');
-Route::post('/project/{id}/progress_plan/work_schedule', 'ProgressPlansController@workSchedule');
+// Route::get('/project/{id}/progress_plan/work_schedule', 'ProgressPlansController@workSchedule');
+Route::any('/project/{id}/progress_plan/work_schedule', 'ProgressPlansController@workSchedule')->name('progress_plan.work_schedule');
 Route::post('/project/{id}/progress_plan/confirm', 'ProgressPlansController@confirm');
 Route::post('/project/{id}/progress_plan/store', 'ProgressPlansController@store');
+
+Route::get('/project/{id}/task_charge/{task_charge_id}/create', 'TaskChargeCompleteController@create');
+Route::post('/project/{id}/task_charge/{task_charge_id}/create', 'TaskChargeCompleteController@store');
+Route::get('/project/task_charge/complete', 'TaskChargeCompleteController@complete');
