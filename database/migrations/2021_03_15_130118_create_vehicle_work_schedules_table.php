@@ -17,7 +17,7 @@ class CreateVehicleWorkSchedulesTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('project_id');
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('vehicle_id');
+            $table->unsignedBigInteger('vehicle_id')->nullable();
             $table->date('work_date');
             $table->timestamps();
 
