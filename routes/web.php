@@ -11,10 +11,13 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 
+// user系
 Auth::routes();
+
+Route::get('/', 'ProjectController@index');
 
 Route::get('/home', 'HomeController@index')->name('home');
