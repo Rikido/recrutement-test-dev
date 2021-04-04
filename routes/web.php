@@ -18,6 +18,8 @@
 // user系
 Auth::routes();
 
-Route::get('/', 'ProjectController@index');
+Route::get('/group', 'GroupsController@index');
+
+Route::get('/', 'ProjectsController@index');
 
 Route::get('/home', 'HomeController@index')->name('home');

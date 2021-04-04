@@ -15,8 +15,11 @@ class CreateProjectsTable extends Migration
     {
         Schema::create('projects', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('project_name', 50);
+            $table->string('project_name');
+            // 符号なしBIGINTカラム
             $table->unsignedBigInteger('group_id');
+            // 外部キー制約
+            $table->foreign('group_id')->references('id')->on('groups');
             $table->string('outline');
             $table->string('file_path');
             $table->timestamps();

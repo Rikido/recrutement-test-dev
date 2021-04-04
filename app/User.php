@@ -8,6 +8,11 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
+    public function group_users()
+    {
+        return $this->hasMany('App\GroupUser');
+    }
+
     use Notifiable;
 
     /**

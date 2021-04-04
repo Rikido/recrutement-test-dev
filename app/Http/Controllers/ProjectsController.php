@@ -6,11 +6,11 @@ use Illuminate\Http\Request;
 
 use App\Project;
 
-class ProjectController extends Controller
+class ProjectsController extends Controller
 {
     public function index() {
         $projects = Project::all();
 
-        return view('project.index');
+        return view('projects.index');
     }
 }
