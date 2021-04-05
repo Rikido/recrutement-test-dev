@@ -13,20 +13,21 @@ class DatabaseSeeder extends Seeder
     {
         // $this->call(UsersTableSeeder::class);
 
-        // userデータ登録
-        factory(App\User::class, 30)
+        // userデータを50件登録
+        factory(App\User::class, 50)
         ->create();
 
         // 登録したuserデータを全抽出
         $users = App\User::all();
 
         // groupにuserを所属させる
-        factory(App\Group::class, 10)
+        // groupを6件登録
+        factory(App\Group::class, 6)
         ->create()
         ->each(function ($group) use ($users) {
             $group->users()->attach(
-                // 5～7個のuserをgroupにランダムに紐づけ
-                $users->random(rand(5,7))->pluck('id')->toArray()
+                // group1件ごとに、userデータを5〜6個ランダムでattach()する
+                $users->random(rand(5,6))->pluck('id')->toArray()
                 );
         });
     }
