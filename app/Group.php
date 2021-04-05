@@ -7,8 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class Group extends Model
 {
     //
-    public function group_users()
+    public function users()
     {
-        return $this->hasMany('App\GroupUser');
+        return $this->belongsToMany('App\User', 'group_users')->withTimestamps();
     }
 }

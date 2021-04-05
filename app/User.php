@@ -8,9 +8,12 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
-    public function group_users()
+    public function groups()
     {
-        return $this->hasMany('App\GroupUser');
+        // 多:多はhasManyではなくbelongsToMany
+        // belongsToManyの第2引数に結合テーブルの名前を渡してオーバーライド
+        // withTimestampsメソッドをリレーション定義に付けることで中間テーブルのcreated_at、updated_atタイムスタンプを自動的に更新
+        return $this->belongsToMany('App\Group', 'group_users')->withTimestamps();
     }
 
     use Notifiable;
