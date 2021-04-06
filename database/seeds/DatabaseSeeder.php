@@ -30,5 +30,12 @@ class DatabaseSeeder extends Seeder
                 $users->random(rand(5,6))->pluck('id')->toArray()
                 );
         });
+
+        // usersデータ挿入
+        $this->call(UsersTableSeeder::class);
+        // groupsデータ挿入
+        $this->call(GroupsTableSeeder::class);
+        // group_usersデータ挿入
+        $this->call(GroupUsersTableSeeder::class);
     }
 }
