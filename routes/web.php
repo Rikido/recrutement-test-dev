@@ -19,12 +19,12 @@
 Auth::routes();
 
 Route::get('/', 'ProjectsController@index');
-Route::get('/project/{id}', 'ProjectsController@show');
 Route::get('/project/create', 'ProjectsController@create');
 Route::post('/project/create', 'ProjectsController@post');
 Route::get('/project/comfirm', 'ProjectsController@comfirm');
 Route::post('/project/comfirm', 'ProjectsController@register');
 Route::get('/project/complete', 'ProjectsController@complete');
+Route::get('/project/{project}', 'ProjectsController@show');
 
 Route::get('/group', 'GroupsController@index');
 
