@@ -3,6 +3,8 @@
 use Illuminate\Database\Seeder;
 // 追記
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
+use Illuminate\Support\Str;
 
 class UsersTableSeeder extends Seeder
 {
@@ -17,7 +19,12 @@ class UsersTableSeeder extends Seeder
             'id' => 51,
             'name' => 'ゲストユーザー',
             'email' => 'guest@example.com',
-            'password' => '123456789',
+            'email_verified_at' => now(),
+            // パスワードをbcryptで暗号化しなければログインできない
+            'password' => bcrypt('123456789'),
+            'remember_token' => Str::random(10),
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
         ]);
     }
 }

@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class GroupsTableSeeder extends Seeder
 {
@@ -16,10 +17,14 @@ class GroupsTableSeeder extends Seeder
             [
                 'id' => 7,
                 'group_name' => 'テストグループ1',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
             ],
             [
                 'id' => 8,
                 'group_name' => 'テストグループ2',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
             ],
         ]);
     }

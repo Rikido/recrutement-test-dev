@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Project;
 // Validatorファザードの使用
-use Validator;
+// use Validator;
+// use Illuminate\Support\Facades\Storage;
 
 class ProjectsController extends Controller
 {
@@ -15,7 +16,7 @@ class ProjectsController extends Controller
     }
 
     // 登録データ([フォーム名])
-    private $projectContents = ['project_name', 'group_id', 'outline', 'file_path'];
+    private $projectContents = ['project_name', 'group_id', 'outline'];
 
     // バリデーション情報
     private $validator = [
@@ -27,27 +28,34 @@ class ProjectsController extends Controller
         'file_path' => 'required|file|mimes:pdf',
     ];
 
+    // 案件一覧画面
     public function index()
     {
-        $projects = Project::all();
-
         return view('projects.index');
     }
 
+    // 案件登録画面
     public function create()
     {
         // ログインユーザーが所属しているgroupを全て取得
         $auth_user_groups = auth()->user()->groups;
-
-        return view('projects.create', ['auth_user_groups' => $auth_user_groups]);
+        return view('projects.create', compact('auth_user_groups'));
     }
 
+    // 案件登録画面の入力値をセッションに登録する処理
     public function post(Request $request)
     {
         // 入力データの取得
         $input = $request->only($this->projectContents);
-        // バリデータの生成（makeメソッドの第１引数にバリデーションを行うデータ、第２引数にそのデータに適用するバリデーションルール）
-        $validator = Validator::make($input, $this->validator);
+        // リクエスト中にファイルが存在しているかを判定
+        if ($request->hasFile('file_path')) {
+            // pdfファイル名の取得
+            $file_name = $request->file('file_path')->getClientOriginalName();
+            // pdfアップロードファイルの取得->storeAsメソッドの第一引数に保存先、第二引数に保存時のファイル名を渡す
+            $file = $request->file('file_path')->storeAs('public', $file_name);
+        }
+        // バリデータの生成（第１引数にバリデーションを行うデータ、第２引数にそのデータに適用するバリデーションルール）
+        $validator = validator($request->all(), $this->validator);
         // エラー時の処理
         if($validator->fails()){
             // 案件作成画面にリダイレクト
@@ -58,25 +66,30 @@ class ProjectsController extends Controller
             ->withErrors($validator);
         }
         // セッションへデータを保存
-        $request->session()->put('project_input', $input);
+        $request->session()->put(['project_input' => $input, 'project_file' => $file, 'file_name' => $file_name]);
         // 作成案件確認画面に遷移
-        return redirect()->action('ProjectsController@confirm');
+        return redirect()->action('ProjectsController@comfirm');
     }
 
+    // 作成案件確認画面
     public function comfirm(Request $request)
     {
         // セッションから値を取り出す
         $input = $request->session()->get('project_input');
+        $file = $request->session()->get('project_file');
+        $file_name = $request->session()->get('file_name');
         // セッションに値が無い時はフォームに戻る
         if(!$input){
             return redirect()->action('ProjectsController@create');
         }
-        return view('projects.confirm',['input' => $input]);
+        return view('projects.comfirm', compact('input', 'file', 'file_name'));
     }
 
+    // セッションから入力値を取り出し、DBに登録後、セッションの入力値を削除する処理
     public function register(Request $request)
     {
         $input = $request->session()->get('project_input');
+        $file = $request->session()->get('project_file');
 
         if(!$input){
             return redirect()->action('ProjectsController@create');
@@ -86,14 +99,15 @@ class ProjectsController extends Controller
         $project->project_name = $input['project_name'];
         $project->group_id = $input['group_id'];
         $project->outline = $input['outline'];
-        $project->file_path = $input['file_path'];
+        $project->file_path = $file;
         $project->save();
         // セッションを空にする、セッションから値を削除するときはforget()関数を使用
-        $request->session()->forget('project_input');
+        $request->session()->forget('input', 'file', 'file_name');
 
         return redirect()->action('ProjectsController@complete');
     }
 
+    // 案件作成完了画面
     public function complete()
     {
         return view('projects.complete');
@@ -101,7 +115,6 @@ class ProjectsController extends Controller
 
     public function show()
     {
-
         return view('projects.show');
     }
 }
