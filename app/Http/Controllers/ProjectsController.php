@@ -4,9 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Project;
-// Validatorファザードの使用
-// use Validator;
-// use Illuminate\Support\Facades\Storage;
 
 class ProjectsController extends Controller
 {
