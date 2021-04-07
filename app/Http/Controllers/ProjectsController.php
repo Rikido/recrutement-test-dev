@@ -28,7 +28,8 @@ class ProjectsController extends Controller
     // 案件一覧画面
     public function index()
     {
-        return view('projects.index');
+        $projects = Project::with('group')->get();
+        return view('projects.index', compact('projects'));
     }
 
     // 案件登録画面
@@ -110,8 +111,9 @@ class ProjectsController extends Controller
         return view('projects.complete');
     }
 
-    public function show()
+    // 案件詳細画面
+    public function show($id)
     {
-        return view('projects.show');
+        return view('projects.show', compact('project'));
     }
 }

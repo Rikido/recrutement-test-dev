@@ -12,6 +12,6 @@ class GroupsController extends Controller
         // リレーションを取得するときはwithを使う（Model::with('リレーション名')->get();）
         $groups = Group::with('users')->get();
         // 取得した値をビュー「groups/index」に渡す
-        return view('groups.index', ['groups' => $groups]);
+        return view('groups.index', compact('groups'));
     }
 }

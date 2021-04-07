@@ -6,10 +6,10 @@
 <div>
 	@foreach ($groups as $group)
 		<h4>
-			{{$group->id}}_グループ名：{{$group->group_name}}
+			{{ $group->id }}_グループ名：{{ $group->group_name }}
 		</h4>
 		@foreach ($group->users as $user)
-			<p>{{$user->id}}_所属ユーザー名：{{$user->name}}</p>
+			<p>{{ $user->id }}_所属ユーザー名：{{ $user->name }}</p>
 		@endforeach
 	@endforeach
 </div>
