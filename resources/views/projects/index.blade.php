@@ -7,7 +7,13 @@
 <div>
 	@foreach ($projects as $project)
 		<h3>
-			<a href="{{ url('/project/'.$project->id) }}">
+			{{-- ログインユーザーの所属するgroupを取り出す --}}
+			<a @foreach ($auths->groups as $auth_group)
+				{{-- ログインユーザーの所属するgroupとprojectのgroupが一致したらリンクを取得 --}}
+				@if($auth_group->id === $project->group->id)
+					href="{{ url('/project/'.$project->id) }}"
+				@endif
+			@endforeach>
 				{{ $project->id }}_案件名：{{ $project->project_name }}
 			</a>
 		</h3>
