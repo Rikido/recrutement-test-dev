@@ -32,7 +32,6 @@ class UsersTableSeeder extends Seeder
                 'name' => 'ゲストユーザー2',
                 'email' => 'guest2@example.com',
                 'email_verified_at' => now(),
-                // パスワードをbcryptで暗号化しなければログインできない
                 'password' => bcrypt('password'),
                 'remember_token' => Str::random(10),
                 'created_at' => Carbon::now(),
