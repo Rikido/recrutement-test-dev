@@ -8,6 +8,10 @@ use App\Group;
 
 class GroupsController extends Controller
 {
+    public function __construct(){
+        $this->middleware('auth');
+    }
+
     public function index() {
         // リレーションを取得するときはwithを使う（Model::with('リレーション名')->get();）
         $groups = Group::with('users')->get();
