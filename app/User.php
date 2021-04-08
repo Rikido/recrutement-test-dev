@@ -18,17 +18,17 @@ class User extends Authenticatable
 
     public function task_charges()
     {
-        return $this->hasMany('App\Task_charge');
+        return $this->hasMany('App\TaskCharge');
     }
 
     public function user_work_schedules()
     {
-        return $this->hasMany('App\User_work_schedule');
+        return $this->hasMany('App\UserWorkSchedule');
     }
 
     public function vehicle_work_schedules()
     {
-        return $this->hasMany('App\Vehicle_work_schedule');
+        return $this->hasMany('App\VehicleWorkSchedule');
     }
 
     use Notifiable;
