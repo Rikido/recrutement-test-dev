@@ -10,3 +10,6 @@
 	<a href="/storage/{{ $file_name }}" target="_blank" rel="noopener noreferrer">設計書ファイル：{{ $file_name }}</a>
 </div>
 <p>担当グループ：{{ $project->group->group_name }}</p>
+
+<input type="button" onClick="location.href='/project/{{ $project->id }}/progress_plan/resource'" value="進行プランを登録する" />
+
