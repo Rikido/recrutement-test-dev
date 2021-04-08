@@ -116,6 +116,18 @@ class ProjectsController extends Controller
     // 案件詳細画面
     public function show($id)
     {
-        return view('projects.show', compact('project'));
+        // 該当するレコードが見つからなかった場合は例外を投げ、キャッチできなければ404レスポンス
+        $project = Project::findOrFail($id);
+        $auths = Auth::user();
+        // URL直打ち対策
+        foreach($auths->groups as $auth_group) {
+            // projectの担当groupのidとログインユーザーが所属しているgroupのidを比較する
+            if($auth_group->id === $project->group->id) {
+                // 一致すれば案件詳細画面へ
+                return view('projects.show', compact('project'));
+            }
+        }
+        // 一致しなければ案件一覧画面へリダイレクト
+        return redirect()->action('ProjectsController@index');
     }
 }
