@@ -16,6 +16,21 @@ class User extends Authenticatable
         return $this->belongsToMany('App\Group', 'group_users')->withTimestamps();
     }
 
+    public function task_charges()
+    {
+        return $this->hasMany('App\Task_charge');
+    }
+
+    public function user_work_schedules()
+    {
+        return $this->hasMany('App\User_work_schedule');
+    }
+
+    public function vehicle_work_schedules()
+    {
+        return $this->hasMany('App\Vehicle_work_schedule');
+    }
+
     use Notifiable;
 
     /**
