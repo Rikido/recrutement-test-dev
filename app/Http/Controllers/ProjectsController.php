@@ -118,13 +118,15 @@ class ProjectsController extends Controller
     {
         // 該当するレコードが見つからなかった場合は例外を投げ、キャッチできなければ404レスポンス
         $project = Project::findOrFail($id);
+        // 文字列からpublic/を削除し、ファイル名を取得
+        $file_name = str_replace('public/', '', $project->file_path);
         $auths = Auth::user();
         // URL直打ち対策
         foreach($auths->groups as $auth_group) {
             // projectの担当groupのidとログインユーザーが所属しているgroupのidを比較する
             if($auth_group->id === $project->group->id) {
                 // 一致すれば案件詳細画面へ
-                return view('projects.show', compact('project'));
+                return view('projects.show', compact('project', 'file_name'));
             }
         }
         // 一致しなければ案件一覧画面へリダイレクト
