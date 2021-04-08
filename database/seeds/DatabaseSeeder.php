@@ -39,5 +39,7 @@ class DatabaseSeeder extends Seeder
         $this->call(GroupUsersTableSeeder::class);
         // locationsデータ挿入
         $this->call(LocationsTableSeeder::class);
+        // vehiclesデータ挿入
+        $this->call(VehiclesTableSeeder::class);
     }
 }
