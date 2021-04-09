@@ -13,5 +13,8 @@
 <div>
 	<a href="/storage/{{ $file_name }}" target="_blank" rel="noopener noreferrer">設計書ファイル：{{ $file_name }}</a>
 </div>
-
-<input type="button" onClick="location.href='/project/{{ $project->id }}/progress_plan/download'" value="設計書ファイルをダウンロードする" />
+@foreach($auths->groups as $auth_group)
+	@if($auth_group->id === $project->group->id)
+		<input type="button" onClick="location.href='/project/{{ $project->id }}/progress_plan/download'" value="設計書ファイルをダウンロードする" />
+	@endif
+@endforeach
