@@ -3,6 +3,7 @@
 
 <input type="button" onclick="location.href='/group'" value="グループ一覧">
 <input type="button" onclick="location.href='/project/create'" value="案件を作成する">
+<input type="button" onclick="location.href='/home'" value="ホーム画面へ">
 
 <div>
 	@foreach ($projects as $project)

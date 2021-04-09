@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Project;
 use Illuminate\Support\Facades\Auth;
+use App\Project;
+use App\Resource;
+use App\ResourceStock;
 
 class ProgressPlansController extends Controller
 {
@@ -17,6 +19,8 @@ class ProgressPlansController extends Controller
         $project = Project::findOrFail($id);
         $auths = Auth::user();
         $file_name = str_replace('public/', '', $project->file_path);
+        // 資材マスタを全て取得する
+        $resources = Resource::all();
         return view('progress_plans.resource', compact('project', 'file_name', 'auths'));
     }
 
