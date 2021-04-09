@@ -31,6 +31,8 @@ Route::get('/group', 'GroupsController@index');
 Route::get('/project/{project}/progress_plan/resource', 'ProgressPlansController@resource');
 Route::post('/project/{project}/progress_plan/resource', 'ProgressPlansController@resource_post');
 Route::get('/project/{project}/progress_plan/task_charge', 'ProgressPlansController@task_charge');
+Route::post('/project/{project}/progress_plan/task_charge', 'ProgressPlansController@task_charge_post');
+Route::get('/project/{project}/progress_plan/location', 'ProgressPlansController@location');
 // 設計書PDFファイルのダウンロード
 Route::get('/project/{project}/progress_plan/download', 'ProgressPlansController@download');
 // ホーム

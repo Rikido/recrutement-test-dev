@@ -8,6 +8,8 @@ use App\Project;
 use App\Resource;
 use App\ResourceStock;
 use App\TaskCharge;
+use App\User;
+use App\Group;
 
 class ProgressPlansController extends Controller
 {
@@ -77,5 +79,15 @@ class ProgressPlansController extends Controller
         $project = Project::findOrFail($id);
         return view('progress_plans.task_charge', compact('project'));
     }
-}
 
+    // 担当割当画面の入力値をセッションに登録する処理
+    public function task_charge_post($id) {
+        $project = Project::findOrFail($id);
+    }
+
+    // 大型資材積込み拠点選択画面
+    public function location($id) {
+        $project = Project::findOrFail($id);
+        return view('progress_plans.location', compact('project'));
+    }
+}
