@@ -29,8 +29,9 @@ Route::get('/project/{project}', 'ProjectsController@show');
 Route::get('/group', 'GroupsController@index');
 // 進行プラン
 Route::get('/project/{project}/progress_plan/resource', 'ProgressPlansController@resource');
+Route::post('/project/{project}/progress_plan/resource', 'ProgressPlansController@resource_post');
+Route::get('/project/{project}/progress_plan/task_charge', 'ProgressPlansController@task_charge');
 // 設計書PDFファイルのダウンロード
 Route::get('/project/{project}/progress_plan/download', 'ProgressPlansController@download');
-
 // ホーム
 Route::get('/home', 'HomeController@index')->name('home');

@@ -37,7 +37,7 @@
 		<select name="group_id">
 			@foreach($auth_user_groups as $auth_user_group)
 				{{-- selectのname属性の値をold()の引数に指定 --}}
-				{{-- if分でidの値が「１」なら@if(old('id')=='1') selecte @endif がselectedされる --}}
+				{{-- if文でidの値が「１」なら@if(old('id')=='1') selecte @endif がselectedされる --}}
 				<option value="{{ $auth_user_group->id }}" @if(old("group_id") == $auth_user_group->id) selected @endif>
 					{{ $auth_user_group->group_name }}
 				</option>
