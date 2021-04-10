@@ -10,6 +10,8 @@ use App\ResourceStock;
 use App\TaskCharge;
 use App\User;
 use App\Group;
+use App\Location;
+use App\ProjectResource;
 
 class ProgressPlansController extends Controller
 {
@@ -117,6 +119,11 @@ class ProgressPlansController extends Controller
     public function location($id) {
         $project = Project::findOrFail($id);
         return view('progress_plans.location', compact('project'));
+    }
+
+    // 大型資材積込み拠点選択画面の入力値をセッションに登録する処理
+    public function location_post($id, Request $request) {
+        $project = Project::findOrFail($id);
     }
 
     // 工事実施日程の表示画面
