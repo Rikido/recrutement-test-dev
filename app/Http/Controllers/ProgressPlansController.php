@@ -77,7 +77,8 @@ class ProgressPlansController extends Controller
     // 担当割当画面
     public function task_charge($id) {
         $project = Project::findOrFail($id);
-        return view('progress_plans.task_charge', compact('project'));
+        $file_name = str_replace('public/', '', $project->file_path);
+        return view('progress_plans.task_charge', compact('project', 'file_name'));
     }
 
     // 担当割当画面の入力値をセッションに登録する処理
