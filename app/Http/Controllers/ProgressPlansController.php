@@ -82,13 +82,46 @@ class ProgressPlansController extends Controller
     }
 
     // 担当割当画面の入力値をセッションに登録する処理
-    public function task_charge_post($id) {
+    public function task_charge_post($id, Request $request) {
         $project = Project::findOrFail($id);
+        $task_charges_input = $request->input('task_charges');
+        // 空の配列の削除
+        $task_name_check = array_filter($task_charges_input, function($array){ return $array['task_name']; });
+        $user_id_check = array_filter($task_name_check, function($array){ return $array['user_id']; });
+        $outline_check = array_filter($user_id_check, function($array){ return $array['outline']; });
+        $task_charges = array_filter($outline_check, function($array){ return $array['order']; });
+//         dd($task_charges);
+        // セッションへデータを保存
+        $request->session()->put('task_charge_input', $task_charges);
+        // 利用資材入力画面でセッションに保存した値を取り出す
+        $project_resources = $request->session()->get('project_resource_input');
+//         dd($project_resources);
+        // 利用資材入力画面で選択した資材に大型資材が含まれているか確認
+        foreach( $project_resources as $key => $project_resource)
+        {
+            // project_resourcesのresource_idを取得
+            $resource_id = $project_resource["resource_name"];
+            // 資材マスタデータの取得
+            $resource = Resource::find($resource_id);
+            // 資材マスタデータのresource_typeを確認
+            if($resource->resource_type == true) {
+                // true(大型資材)があれば大型資材積込み拠点選択画面へ遷移
+                return redirect()->action('ProgressPlansController@location', ['id' => $project->id]);
+            }
+        };
+        // なければ工事実施日程の表示画面へ遷移
+        return redirect()->action('ProgressPlansController@scheduled_date', ['id' => $project->id]);
     }
 
     // 大型資材積込み拠点選択画面
     public function location($id) {
         $project = Project::findOrFail($id);
         return view('progress_plans.location', compact('project'));
+    }
+
+    // 工事実施日程の表示画面
+    public function scheduled_date($id) {
+        $project = Project::findOrFail($id);
+        return view('progress_plans.scheduled_date', compact('project'));
     }
 }

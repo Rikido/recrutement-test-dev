@@ -33,6 +33,8 @@ Route::post('/project/{project}/progress_plan/resource', 'ProgressPlansControlle
 Route::get('/project/{project}/progress_plan/task_charge', 'ProgressPlansController@task_charge');
 Route::post('/project/{project}/progress_plan/task_charge', 'ProgressPlansController@task_charge_post');
 Route::get('/project/{project}/progress_plan/location', 'ProgressPlansController@location');
+
+Route::get('/project/{project}/progress_plan/scheduled_date', 'ProgressPlansController@scheduled_date');
 // 設計書PDFファイルのダウンロード
 Route::get('/project/{project}/progress_plan/download', 'ProgressPlansController@download');
 // ホーム
