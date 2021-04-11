@@ -89,6 +89,13 @@ class ProgressPlansController extends Controller
         $user_id_check = array_filter($task_name_check, function($array){ return $array['user_id']; });
         $outline_check = array_filter($user_id_check, function($array){ return $array['outline']; });
         $task_charges = array_filter($outline_check, function($array){ return $array['order']; });
+
+        foreach($task_charges as $index => $task_charge) {
+            // 担当するユーザーのレコードを取得
+            $task_user = User::find($task_charge["user_id"]);
+            // 担当するユーザーの名前を格納
+            $task_charges[$index]["user_name"] = $task_user->name;
+        }
         // セッションへデータを保存
         $request->session()->put('task_charge_input', $task_charges);
         // 利用資材入力画面でセッションに保存した値を取り出す
@@ -176,9 +183,14 @@ class ProgressPlansController extends Controller
     }
 
     // 工事実施日程の表示画面
-    public function scheduled_date($id) {
+    public function scheduled_date($id, Request $request) {
         $project = Project::findOrFail($id);
-        return view('progress_plans.scheduled_date', compact('project'));
+        $file_name = str_replace('public/', '', $project->file_path);
+        // セッションへ保存した担当情報を取り出す
+        $task_charges = $request->session()->get('task_charge_input');
+        // セッションへ保存した案件使用資材を取り出す
+        $project_resources = $request->session()->get('resource_stocks_input');
+        return view('progress_plans.scheduled_date', compact('project', 'file_name', 'task_charges', 'project_resources'));
     }
 
     // 工事実施日程をセッションに登録する処理
