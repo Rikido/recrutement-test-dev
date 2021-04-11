@@ -35,8 +35,6 @@ class ProgressPlansController extends Controller
         $project = Project::findOrFail($id);
         // 入力値の取得
         $project_resource_input = $request->input('project_resources');
-//         dd($project_resource_input);
-
         // 多次元配列$project_resource_inputから空の配列を削除する
         // array_filterの第一引数にコールバック関数に渡す配列を指定、第二引数にコールバック関数を指定
         // 戻り値には、コールバック関数でフィルタリングされた結果の配列を返す
@@ -44,13 +42,10 @@ class ProgressPlansController extends Controller
             // $project_resource_input内の各配列のresource_nameのnullを確認
             return $array['resource_name'];
         });
-//         dd($project_resource_name);
         $project_resource = array_filter($project_resource_name, function($array){
             // $project_resource_input内の各配列のconsumption_quantityのnullを確認
             return $array['consumption_quantity'];
         });
-//         dd($project_resource);
-
         // セッションへデータを保存
         $request->session()->put('project_resource_input', $project_resource);
         // 担当割当画面に遷移
@@ -93,12 +88,10 @@ class ProgressPlansController extends Controller
         $user_id_check = array_filter($task_name_check, function($array){ return $array['user_id']; });
         $outline_check = array_filter($user_id_check, function($array){ return $array['outline']; });
         $task_charges = array_filter($outline_check, function($array){ return $array['order']; });
-//         dd($task_charges);
         // セッションへデータを保存
         $request->session()->put('task_charge_input', $task_charges);
         // 利用資材入力画面でセッションに保存した値を取り出す
         $project_resources = $request->session()->get('project_resource_input');
-//         dd($project_resources);
         // 利用資材入力画面で選択した資材に大型資材が含まれているか確認
         foreach($project_resources as $key => $project_resource) {
             // project_resourcesのresource_idを取得
@@ -122,8 +115,6 @@ class ProgressPlansController extends Controller
         $resource_stocks_index = ResourceStock::all();
         // 利用資材入力画面でセッションに保存した値を取り出す
         $project_resources = $request->session()->get('project_resource_input');
-        // 利用資材入力画面で選択した大型資材のマスタデータを格納する配列
-        $large_resource_array = [];
         // 利用資材入力画面で選択したデータのうち、大型資材のみ抽出して格納する配列
         $large_resource_stocks_array = [];
         // 利用資材入力画面で選択した資材に大型資材が含まれているか確認
@@ -131,8 +122,6 @@ class ProgressPlansController extends Controller
             $resource_id = $project_resource["resource_name"];
             $resource = Resource::find($resource_id);
             if($resource->resource_type == true) {
-                // true(大型資材)の資材マスタデータのみ配列に格納する
-                array_push($large_resource_array, $resource);
                 // true(大型資材)の入力値のみ配列に格納する
                 array_push($large_resource_stocks_array, $project_resource);
             }
@@ -162,7 +151,6 @@ class ProgressPlansController extends Controller
                     } else {
                         // 必要数を格納する(入力値はstringなのでintegerにキャスト)
                         $location_select_array[$index]["consumption_quantity"] = (int)$large_resource_stock["consumption_quantity"];
-                        // インクリメント
                         $index++;
                         // breakで外側のループもまとめてスキップ
                         break;
@@ -170,48 +158,6 @@ class ProgressPlansController extends Controller
                 }
             }
         }
-//         dd($location_select_array);
-//         $location_select_array = [];
-//         $index = 0;
-//         foreach($large_resource_array as $large_resource) {
-//             // 利用資材入力画面で選択された資材マスタのidに一致するresource_stocksを全て取得し、在庫数が多い順に並べ替える
-//             $large_resource_stocks = DB::table('resource_stocks')->where('resource_id', $large_resource->id)->orderBy('stock', 'DESC')->get();
-//             // [["location" => ID, "resource" => ID, "consumption_quantity" => 使用数], [], []...]の形式で値を格納
-// //             dd($large_resource_stocks);
-//             $stock_check = 0;
-//             foreach($large_resource_stocks as $key => $large_resource_stock) {
-//                 // 大型資材の在庫数を格納
-//                 $stock = $large_resource_stock->stock;
-//                 // 最も在庫数が多い大型資材在庫のデータを格納する処理
-//                 if($stock_check < $stock) {
-//                     $stock_check = $stock;
-//                     // 拠点IDを追加
-//                     $location_select_array[$index]["location"] = $large_resource_stock->location_id;
-//                     // 資材IDを追加
-//                     $location_select_array[$index]["resource"] = $large_resource_stock->resource_id;
-//                     // 使用数を取得
-//                     foreach((array)$project_resources as $key => $project_resource) {
-//                         if($project_resource["resource_name"] == $large_resource["id"]) {
-//                             // 使用数を追加
-//                             $location_select_array[$index]["consumption_quantity"] = $project_resource["consumption_quantity"];
-//                         }
-//                     };
-//                     // もし在庫足りない場合の処理（在庫数 - 使用数）
-//                     if(0 > ($stock_check - $location_select_array[$index]["consumption_quantity"])) {
-//                         // 必要な残りの使用数（使用数 - 在庫数）
-//                         $next_consumption_quantity = $location_select_array[$index]["consumption_quantity"] - $stock_check;
-//                         // 格納した使用数を在庫数を考慮した値に修正（在庫の全てを格納する）
-//                         $location_select_array[$index]["consumption_quantity"] = $stock_check;
-//                         // 次の拠点を格納
-//                         $index++;
-//                         //                         $location_select_array[$index]["location"] =
-//                         //                         $location_select_array[$index]["resource"] =
-//                         //                         $location_select_array[$index]["consumption_quantity"] = $next_consumption_quantity;
-//                     }
-//                 }
-//             }
-//             $index++;
-//         }
         return view('progress_plans.location', compact('project', 'resource_stocks_index', 'large_resource_array', 'location_select_array'));
     }
 
