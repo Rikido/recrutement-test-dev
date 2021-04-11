@@ -16,3 +16,13 @@
 	<p>担当ユーザー：{{ $task_charge["user_name"] }}</p>
 	<p>実行順序：{{ $task_charge["order"] }}</p>
 @endforeach
+
+<h2>資材積込み拠点</h2>
+{{-- 大型資材を選択していない場合は空 --}}
+@if(!empty($project_resources))
+	@foreach($project_resources as $project_resource)
+		<h3>拠点名：{{ $project_resource["location_name"] }}</h3>
+    	<p>資材名：{{ $project_resource["resource_name"] }}</p>
+    	<p>積み込み数：{{ $project_resource["consumption_quantity"] }}</p>
+	@endforeach
+@endif

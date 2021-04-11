@@ -176,6 +176,17 @@ class ProgressPlansController extends Controller
         $resource_stocks_input = $request->input('resource_stocks');
         // consumption_quantityが空の配列を取り除く
         $resource_stocks_input = array_filter($resource_stocks_input, function($array){ return $array['consumption_quantity']; });
+
+        foreach($resource_stocks_input as $index => $resource_stock) {
+            // 選択した拠点のレコードを取得
+            $select_location = Location::find($resource_stock["location_id"]);
+            // 選択した資材のレコードを取得
+            $select_resource = Resource::find($resource_stock["resource_id"]);
+            // 選択した拠点の名前を取得
+            $resource_stocks_input[$index]["location_name"] = $select_location->location_name;
+            // 選択した資材の名前を取得
+            $resource_stocks_input[$index]["resource_name"] = $select_resource->resource_name;
+        }
         // セッションへデータを保存
         $request->session()->put('resource_stocks_input', $resource_stocks_input);
         // 工事実施日程の表示画面へ遷移
@@ -188,8 +199,13 @@ class ProgressPlansController extends Controller
         $file_name = str_replace('public/', '', $project->file_path);
         // セッションへ保存した担当情報を取り出す
         $task_charges = $request->session()->get('task_charge_input');
-        // セッションへ保存した案件使用資材を取り出す
-        $project_resources = $request->session()->get('resource_stocks_input');
+        // 案件使用資材が空ではない場合
+        if(!empty($request->session()->get('resource_stocks_input'))) {
+            // セッションへ保存した案件使用資材を取り出す
+            $project_resources = $request->session()->get('resource_stocks_input');
+        } else {
+            $project_resources = [];
+        }
         return view('progress_plans.scheduled_date', compact('project', 'file_name', 'task_charges', 'project_resources'));
     }
 
