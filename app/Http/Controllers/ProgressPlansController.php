@@ -180,4 +180,17 @@ class ProgressPlansController extends Controller
         $project = Project::findOrFail($id);
         return view('progress_plans.scheduled_date', compact('project'));
     }
+
+    // 工事実施日程をセッションに登録する処理
+    public function scheduled_date_post($id) {
+        $project = Project::findOrFail($id);
+        // 作成進行プラン内容確認画面へ遷移
+        return redirect()->action('ProgressPlansController@comfirm', ['id' => $project->id]);
+    }
+
+    // 作成進行プラン内容確認画面
+    public function comfirm($id) {
+        $project = Project::findOrFail($id);
+        return view('progress_plans.comfirm', compact('project'));
+    }
 }
