@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Symfony\Component\Console\Input\Input;
 use App\Project;
 use App\Resource;
 use App\ResourceStock;
@@ -164,6 +165,14 @@ class ProgressPlansController extends Controller
     // 大型資材積込み拠点選択画面の入力値をセッションに登録する処理
     public function location_post($id, Request $request) {
         $project = Project::findOrFail($id);
+        // 入力値を取得
+        $resource_stocks_input = $request->input('resource_stocks');
+        // consumption_quantityが空の配列を取り除く
+        $resource_stocks_input = array_filter($resource_stocks_input, function($array){ return $array['consumption_quantity']; });
+        // セッションへデータを保存
+        $request->session()->put('resource_stocks_input', $resource_stocks_input);
+        // 工事実施日程の表示画面へ遷移
+        return redirect()->action('ProgressPlansController@scheduled_date', ['id' => $project->id]);
     }
 
     // 工事実施日程の表示画面

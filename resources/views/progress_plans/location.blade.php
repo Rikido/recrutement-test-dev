@@ -10,29 +10,37 @@
 <form method="post" action="/project/{{ $project->id }}/progress_plan/location">
 	@csrf
 
+	<?php $i = 0; ?>
 	@foreach ($resource_stocks_index as $key => $resource_stock)
-		<label>拠点名</label>
+		<input type="hidden" name="resource_stocks[{{ $i }}][project_id]" value="{{ $project->id }}">
+
+		<label for="resource_stocks[{{ $i }}][location_id]">拠点名</label>
     	<div>
     		{{ $resource_stock->location->location_name }}
+    		<input type="hidden" name="resource_stocks[{{ $i }}][location_id]" value="{{ $resource_stock->location_id }}">
     	</div>
-    	<label>資材名</label>
+    	<label for="resource_stocks[{{ $i }}][resource_id]">資材名</label>
     	<div>
     		 {{ $resource_stock->resource->resource_name  }}
+    		 <input type="hidden" name="resource_stocks[{{ $i }}][resource_id]" value="{{ $resource_stock->resource_id }}">
     	</div>
     	<label>在庫数</label>
     	<div>
     		{{ $resource_stock->stock }}
     	</div>
-    	<label for="consumption_quantity">積み込み数</label>
+    	<label for="resource_stocks[{{ $i }}][consumption_quantity]">積み込み数</label>
     	<div>
-    		<input type="number" min="1" name="consumption_quantity" value=
+    		<input type="number" min="1" name="resource_stocks[{{ $i }}][consumption_quantity]" value=
         		@foreach ($location_select_array as $key => $location_select)
         			@if(($location_select["location"] == $resource_stock->location_id) && ($location_select["resource"] == $resource_stock->resource_id))
         				{{ old("consumption_quantity", $location_select["consumption_quantity"]) }}
+        			@else
+        				{{ old("consumption_quantity") }}
         			@endif
         		@endforeach
     		 >
     	</div>
+    	<?php $i++; ?>
 	@endforeach
 	{{-- 使用数が入力されていない配列は削除する --}}
 
