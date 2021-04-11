@@ -10,7 +10,7 @@
 <form method="post" action="/project/{{ $project->id }}/progress_plan/location">
 	@csrf
 
-	@foreach ($resource_stocks as $resource_stock)
+	@foreach ($resource_stocks_index as $key => $resource_stock)
 		<label>拠点名</label>
     	<div>
     		{{ $resource_stock->location->location_name }}

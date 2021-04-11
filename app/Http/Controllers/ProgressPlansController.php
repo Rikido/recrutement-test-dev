@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use App\Project;
 use App\Resource;
 use App\ResourceStock;
@@ -118,12 +119,13 @@ class ProgressPlansController extends Controller
     public function location($id, Request $request) {
         $project = Project::findOrFail($id);
         // 大型資材在庫を全て取得する
-        $resource_stocks = ResourceStock::all();
+        $resource_stocks_index = ResourceStock::all();
         // 利用資材入力画面でセッションに保存した値を取り出す
         $project_resources = $request->session()->get('project_resource_input');
-//         dd($project_resources);
-        // 利用資材入力画面で選択した大型資材を格納する配列
+        // 利用資材入力画面で選択した大型資材のマスタデータを格納する配列
         $large_resource_array = [];
+        // 利用資材入力画面で選択したデータのうち、大型資材のみ抽出して格納する配列
+        $large_resource_stocks_array = [];
         // 利用資材入力画面で選択した資材に大型資材が含まれているか確認
         foreach((array)$project_resources as $key => $project_resource) {
             $resource_id = $project_resource["resource_name"];
@@ -131,53 +133,86 @@ class ProgressPlansController extends Controller
             if($resource->resource_type == true) {
                 // true(大型資材)の資材マスタデータのみ配列に格納する
                 array_push($large_resource_array, $resource);
+                // true(大型資材)の入力値のみ配列に格納する
+                array_push($large_resource_stocks_array, $project_resource);
             }
         };
-//         dd($large_resource_array);
+        // [["location" => ID, "resource" => ID, "consumption_quantity" => 使用数], [], []...]の形式で値を格納
         $location_select_array = [];
         $index = 0;
-        foreach($large_resource_array as $large_resource) {
-            // 利用資材入力画面で選択された資材マスタのidに一致するresource_stocksを全て取得する
-            $large_resource_stocks = ResourceStock::where('resource_id', $large_resource["id"])->get();
-            // [["location" => ID, "resource" => ID, "consumption_quantity" => 使用数], [], []...]の形式で値を格納
-//             dd($large_resource_stocks);
-            $stock_check = 0;
-            foreach($large_resource_stocks as $key => $large_resource_stock) {
-                // 大型資材の在庫数を格納
-                $stock = $large_resource_stock['stock'];
-                // 最も在庫数が多い大型資材在庫のデータを格納する処理
-                if($stock_check < $stock) {
-                    $stock_check = $stock;
-                    // 在庫数が一番多いレコードの拠点IDを追加
-                    $location_select_array[$index]["location"] = $large_resource_stock["location_id"];
-                    // 在庫数が一番多いレコードの資材IDを追加
-                    $location_select_array[$index]["resource"] = $large_resource_stock["resource_id"];
-                    // 使用数を取得
-                    foreach((array)$project_resources as $key => $project_resource) {
-                        if($project_resource["resource_name"] == $large_resource["id"]) {
-                            // 使用数を追加
-                            $location_select_array[$index]["consumption_quantity"] = $project_resource["consumption_quantity"];
-                        }
-                    };
+        foreach((array)$large_resource_stocks_array as $key => $large_resource_stock) {
+            // 利用資材入力画面で選択された資材マスタのidに一致するresource_stocksを全て取得し、在庫数が多い順に並べ替える
+            $resource_stocks = DB::table('resource_stocks')->where('resource_id', $large_resource_stock["resource_name"])->orderBy('stock', 'DESC')->get();
+            // resource_stocksをeach(連想配列の連想配列)
+            foreach((array)$resource_stocks as $key => $resource_stock_array) {
+                foreach((array)$resource_stock_array as $key => $resource_stock) {
+                    // 拠点IDを追加
+                    $location_select_array[$index]["location"] = $resource_stock->location_id;
+                    // 資材IDを追加
+                    $location_select_array[$index]["resource"] = $resource_stock->resource_id;
+                    // もし在庫より使用数の方が多い場合
+                    if($resource_stock->stock < $large_resource_stock["consumption_quantity"]) {
+                        // 在庫を全て使用数に格納
+                        $location_select_array[$index]["consumption_quantity"] = $resource_stock->stock;
+                        // 必要数から在庫分し差し引き、残りの使用数を算出する
+                        $large_resource_stock["consumption_quantity"] = $large_resource_stock["consumption_quantity"] - $resource_stock->stock;
+                        // インクリメント
+                        $index++;
+                    // 在庫分で使用数を満たした場合
+                    } else {
+                        // 必要数を格納する(入力値はstringなのでintegerにキャスト)
+                        $location_select_array[$index]["consumption_quantity"] = (int)$large_resource_stock["consumption_quantity"];
+                        // インクリメント
+                        $index++;
+                        // breakで外側のループもまとめてスキップ
+                        break;
+                    }
+                }
+            }
+        }
+//         dd($location_select_array);
+//         $location_select_array = [];
+//         $index = 0;
+//         foreach($large_resource_array as $large_resource) {
+//             // 利用資材入力画面で選択された資材マスタのidに一致するresource_stocksを全て取得し、在庫数が多い順に並べ替える
+//             $large_resource_stocks = DB::table('resource_stocks')->where('resource_id', $large_resource->id)->orderBy('stock', 'DESC')->get();
+//             // [["location" => ID, "resource" => ID, "consumption_quantity" => 使用数], [], []...]の形式で値を格納
+// //             dd($large_resource_stocks);
+//             $stock_check = 0;
+//             foreach($large_resource_stocks as $key => $large_resource_stock) {
+//                 // 大型資材の在庫数を格納
+//                 $stock = $large_resource_stock->stock;
+//                 // 最も在庫数が多い大型資材在庫のデータを格納する処理
+//                 if($stock_check < $stock) {
+//                     $stock_check = $stock;
+//                     // 拠点IDを追加
+//                     $location_select_array[$index]["location"] = $large_resource_stock->location_id;
+//                     // 資材IDを追加
+//                     $location_select_array[$index]["resource"] = $large_resource_stock->resource_id;
+//                     // 使用数を取得
+//                     foreach((array)$project_resources as $key => $project_resource) {
+//                         if($project_resource["resource_name"] == $large_resource["id"]) {
+//                             // 使用数を追加
+//                             $location_select_array[$index]["consumption_quantity"] = $project_resource["consumption_quantity"];
+//                         }
+//                     };
 //                     // もし在庫足りない場合の処理（在庫数 - 使用数）
 //                     if(0 > ($stock_check - $location_select_array[$index]["consumption_quantity"])) {
 //                         // 必要な残りの使用数（使用数 - 在庫数）
 //                         $next_consumption_quantity = $location_select_array[$index]["consumption_quantity"] - $stock_check;
-//                         // 格納した使用数を在庫数を考慮した値に修正（在庫全て）
+//                         // 格納した使用数を在庫数を考慮した値に修正（在庫の全てを格納する）
 //                         $location_select_array[$index]["consumption_quantity"] = $stock_check;
 //                         // 次の拠点を格納
 //                         $index++;
-//                         $location_select_array[$index]["location"] =
-//                         $location_select_array[$index]["resource"] =
-//                         $location_select_array[$index]["consumption_quantity"] = $next_consumption_quantity;
+//                         //                         $location_select_array[$index]["location"] =
+//                         //                         $location_select_array[$index]["resource"] =
+//                         //                         $location_select_array[$index]["consumption_quantity"] = $next_consumption_quantity;
 //                     }
-                }
-            }
-            $index++;
-        }
-//         dd($location_select_array);
-//         dd($large_resource_array);
-        return view('progress_plans.location', compact('project', 'resource_stocks', 'large_resource_array', 'location_select_array'));
+//                 }
+//             }
+//             $index++;
+//         }
+        return view('progress_plans.location', compact('project', 'resource_stocks_index', 'large_resource_array', 'location_select_array'));
     }
 
     // 大型資材積込み拠点選択画面の入力値をセッションに登録する処理
