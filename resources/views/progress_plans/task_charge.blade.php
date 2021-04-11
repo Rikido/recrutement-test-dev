@@ -15,10 +15,11 @@
 <form method="post" action="/project/{{ $project->id }}/progress_plan/task_charge">
 	@csrf
 
-	<input type="hidden" name="project_id" value="{{ $project->id }}">
-
 	{{-- 1案件で登録できる担当項目は20項目までなので、フォームを20件分表示する --}}
 	@for($i = 0; $i < 20; $i++)
+
+		<input type="hidden" name="task_charges[{{ $i }}][project_id]" value="{{ $project->id }}">
+
 		<label for="task_charges[{{ $i }}][task_name]">{{ $i + 1 }}_担当項目名</label>
 		<div>
 			<input type="text" name="task_charges[{{ $i }}][task_name]" value="{{ old("task_charges.$i.task_name") }}" />

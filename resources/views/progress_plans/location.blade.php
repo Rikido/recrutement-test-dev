@@ -42,9 +42,7 @@
     	</div>
     	<?php $i++; ?>
 	@endforeach
-	{{-- 使用数が入力されていない配列は削除する --}}
 
 	<input name="back" type="button" onClick="history.back()" value="修正する" />
 	<input type="submit" value="次の画面へ進む">
 </form>
-
