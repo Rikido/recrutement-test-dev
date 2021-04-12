@@ -26,3 +26,10 @@
     	<p>積み込み数：{{ $project_resource["consumption_quantity"] }}</p>
 	@endforeach
 @endif
+
+<form method="post" action="/project/{{ $project->id }}/progress_plan/scheduled_date">
+	@csrf
+
+	<input name="back" type="button" onClick="history.back()" value="修正する" />
+	<input type="submit" value="次の画面へ進む">
+</form>
