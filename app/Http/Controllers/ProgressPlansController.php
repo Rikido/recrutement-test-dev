@@ -15,6 +15,8 @@ use App\Group;
 use App\Location;
 use App\ProjectResource;
 use App\Vehicle;
+use App\UserWorkSchedule;
+use App\VehicleWorkSchedule;
 
 class ProgressPlansController extends Controller
 {
@@ -198,7 +200,7 @@ class ProgressPlansController extends Controller
         return redirect()->action('ProgressPlansController@scheduled_date', ['id' => $project->id]);
     }
 
-    // 工事実施日程の表示画面
+    // 工事実施日程の表示画面（使用する車両を判断し、セッションへ保存する）
     public function scheduled_date($id, Request $request) {
         $project = Project::findOrFail($id);
         $file_name = str_replace('public/', '', $project->file_path);
@@ -278,7 +280,40 @@ class ProgressPlansController extends Controller
                 }
             }
         }
-        return view('progress_plans.scheduled_date', compact('project', 'file_name', 'task_charges', 'project_resources', 'vehicles_select_array'));
+
+        // 実施日を判断する処理
+        // 今日の年月日を取得する
+        $now_date = date("Y-m-d");
+        // セッションから担当情報を取得する
+        $task_charges = $request->session()->get("task_charge_input");
+        // 担当情報からユーザーIDを取得する
+        $task_users = [];
+        foreach((array)$task_charges as $task_charge) {
+            array_push($task_users, $task_charge["user_id"]);
+        }
+        // ユーザーが持つ、今日以降のユーザー稼働日を昇順で全て取得する
+        $already_user_work_schedule = UserWorkSchedule::where('user_id', $task_users)->where('work_date', '>', $now_date)->orderBy('work_date', 'asc')->get()->toArray();
+        // 使用する車両のIDを取得する
+        $select_vehicles = [];
+        foreach((array)$vehicles_select_array as $vehicle_array) {
+            array_push($select_vehicles, $vehicle_array["vehicle_id"]);
+        }
+        // 重複するIDを削除
+        $select_vehicles = collect($select_vehicles)->unique()->toArray();
+        // 車両が持つ、今日以降の車両稼働日を昇順で全て取得する
+        $already_vehicle_work_schedule = VehicleWorkSchedule::where('vehicle_id', $select_vehicles)->where('work_date', '>', $now_date)->orderBy('work_date', 'asc')->get()->toArray();
+        // ユーザーも車両も予定がない場合
+        if((empty($already_user_work_schedule)) && (empty($already_vehicle_work_schedule))) {
+            // 明日の日付を格納する
+            $implementation_date = date('Y-m-d', strtotime('+1 day'));
+        } else {
+            // 予定がある場合の処理
+            $implementation_date = date('Y-m-d', strtotime('+1 day'));
+        }
+
+        // セッションへデータを保存
+        $request->session()->put('vehicles_select_input', $vehicles_select_array);
+        return view('progress_plans.scheduled_date', compact('project', 'file_name', 'task_charges', 'project_resources', 'vehicles_select_array', 'implementation_date'));
     }
 
     // 工事実施日程をセッションに登録する処理

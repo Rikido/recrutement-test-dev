@@ -41,7 +41,8 @@
 
 <form method="post" action="/project/{{ $project->id }}/progress_plan/scheduled_date">
 	@csrf
-
+	<h3>最短工事実施日程：{{ $implementation_date }}</h3>
+	<input type="hidden" name="implementation_date" value="{{ $implementation_date }}">
 	<input name="back" type="button" onClick="history.back()" value="修正する" />
 	<input type="submit" value="次の画面へ進む">
 </form>
