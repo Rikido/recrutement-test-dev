@@ -29,7 +29,7 @@
 
 <h2>使用車両一覧</h2>
 {{-- 大型資材を選択していない場合は空 --}}
-@if(!empty($project_resources))
+@if(!empty($vehicles_select_array))
 	@foreach($vehicles_select_array as $vehicles_select)
 		<h3>車両ID：{{ $vehicles_select["vehicle_id"] }}</h3>
 		<p>車両最大積載量：{{ $vehicles_select["vehicle_weight"] }}</p>
