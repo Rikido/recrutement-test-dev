@@ -14,6 +14,7 @@ use App\User;
 use App\Group;
 use App\Location;
 use App\ProjectResource;
+use App\Vehicle;
 
 class ProgressPlansController extends Controller
 {
@@ -206,7 +207,73 @@ class ProgressPlansController extends Controller
         } else {
             $project_resources = [];
         }
-        return view('progress_plans.scheduled_date', compact('project', 'file_name', 'task_charges', 'project_resources'));
+
+        // 車両の選定
+        // 使用する車両を格納する配列
+        $vehicles_select_array = [];
+        $index = 0;
+        foreach((array)$project_resources as $key => $project_resource) {
+            // セッションから取り出した案件使用資材のresource_idからresource_stocksを取得する(複数あるが、weightとsizeはどれも同じ)
+            $resource_stock = ResourceStock::find($project_resource["resource_id"]);
+            // 大型資材のサイズを取得する
+            $resource_size = $resource_stock["size"];
+            // 大型資材のサイズ以上の積載サイズ上限を持つ車両を全て取得する
+            $vehicles_index = Vehicle::where("max_size", ">=", $resource_size)->get();
+            // 連想配列の連想配列
+            foreach((array)$vehicles_index as $vehicles) {
+                // $vehiclesの連想配列から出たらもう一度車両の重量を更新する
+                if(!empty($vehicles_select_array)) {
+                    // 車両一覧をeach
+                    foreach((array)$vehicles as $key => $vehicle) {
+                        // 使用する車両をeach
+                        foreach((array)$vehicles_select_array as $i => $vehicles_select) {
+                            // 一覧の車両IDと使用する車両IDが一致する場合
+                            if($vehicle["id"] == $vehicles_select["vehicle_id"]) {
+                                // 車両重量から搭載する資材 * 使用数を差し引く
+                                $vehicle["max_weight"] = $vehicle["max_weight"] - ($vehicles_select_array[$i]["resource_weight"] * (float)$vehicles_select_array[$i]["resource_count"]);
+                            }
+                        }
+                    }
+                }
+                foreach((array)$vehicles as $key => $vehicle) {
+                    // 使用する車両の情報を配列に格納する
+                    $vehicles_select_array[$index]["vehicle_id"] = $vehicle["id"];
+                    $vehicles_select_array[$index]["vehicle_weight"] = Vehicle::find($vehicle["id"])["max_weight"]; // 重量は更新されるので直接取得
+                    $vehicles_select_array[$index]["vehicle_size"] = $vehicle["max_size"];
+                    // 車両の最大積載量/大型資材の重量を切り捨て = 車両に積める資材の個数
+                    $resource_count_float = $vehicle["max_weight"] / $resource_stock["weight"];
+                    // 小数点切り捨て
+                    $resource_count = (int)floor($resource_count_float);
+                    // 使用数 - 車両搭載可能数が0以下の場合
+                    if(0 >= ((int)$project_resource["consumption_quantity"] - (int)$resource_count)) {
+                        // 使用数を格納する
+                        $vehicles_select_array[$index]["resource_count"] = (int)$project_resource["consumption_quantity"];
+                    } else {
+                        // 車両搭載可能数を格納する
+                        $vehicles_select_array[$index]["resource_count"] = $resource_count;
+                    }
+                    // 車両に搭載する資材のIDを配列に格納
+                    $vehicles_select_array[$index]["resource_id"] = $resource_stock["resource_id"];
+                    // 車両に搭載する資材の名前を配列に格納
+                    $vehicles_select_array[$index]["resource_name"] = Resource::find($resource_stock["resource_id"])["resource_name"];
+                    // 車両に搭載する資材の重量を配列に格納
+                    $vehicles_select_array[$index]["resource_weight"] = $resource_stock["weight"];
+                    // 案件で使用する資材の数量 - 車両に積める資材の個数
+                    $project_resource["consumption_quantity"] = (int)$project_resource["consumption_quantity"] - (int)$vehicles_select_array[$index]["resource_count"];
+                    // 車両の重量を更新
+                    $vehicle["max_weight"] = $vehicle["max_weight"] - ($vehicles_select_array[$index]["resource_weight"] * (float)$vehicles_select_array[$index]["resource_count"]);
+                    // インクリメント
+                    $index++;
+                    // もし車両に資材を積むことができたら
+                    if(0 == $project_resource["consumption_quantity"]) {
+                        // 外側のループを抜ける
+                        break;
+                    }
+                }
+            }
+        }
+//         dd($vehicles_select_array);
+        return view('progress_plans.scheduled_date', compact('project', 'file_name', 'task_charges', 'project_resources', 'vehicles_select_array'));
     }
 
     // 工事実施日程をセッションに登録する処理

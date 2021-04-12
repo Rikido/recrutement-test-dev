@@ -27,6 +27,18 @@
 	@endforeach
 @endif
 
+<h2>使用車両一覧</h2>
+{{-- 大型資材を選択していない場合は空 --}}
+@if(!empty($project_resources))
+	@foreach($vehicles_select_array as $vehicles_select)
+		<h3>車両ID：{{ $vehicles_select["vehicle_id"] }}</h3>
+		<p>車両最大積載量：{{ $vehicles_select["vehicle_weight"] }}</p>
+		<p>車両積載サイズ上限：{{ $vehicles_select["vehicle_size"] }}</p>
+    	<p>資材名：{{ $vehicles_select["resource_name"] }}</p>
+    	<p>積み込み数：{{ $vehicles_select["resource_count"] }}</p>
+	@endforeach
+@endif
+
 <form method="post" action="/project/{{ $project->id }}/progress_plan/scheduled_date">
 	@csrf
 

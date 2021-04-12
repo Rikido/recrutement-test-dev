@@ -56,6 +56,48 @@ class VehiclesTableSeeder extends Seeder
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
+            [
+                'id' => 7,
+                'max_weight' => 3500.0,
+                'max_size' => 7.2,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+            [
+                'id' => 8,
+                'max_weight' => 3500.0,
+                'max_size' => 7.2,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+            [
+                'id' => 9,
+                'max_weight' => 3500.0,
+                'max_size' => 7.2,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+            [
+                'id' => 10,
+                'max_weight' => 3500.0,
+                'max_size' => 7.2,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+            [
+                'id' => 11,
+                'max_weight' => 2000.0,
+                'max_size' => 4.0,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+            [
+                'id' => 12,
+                'max_weight' => 7500.0,
+                'max_size' => 9.67,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
         ]);
     }
 }
