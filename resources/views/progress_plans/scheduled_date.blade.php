@@ -23,7 +23,7 @@
 	@foreach($project_resources as $project_resource)
 		<h3>拠点名：{{ $project_resource["location_name"] }}</h3>
     	<p>資材名：{{ $project_resource["resource_name"] }}</p>
-    	<p>積み込み数：{{ $project_resource["consumption_quantity"] }}</p>
+    	<p>積み込み数：{{ $project_resource["consumption_quantity"] }}個</p>
 	@endforeach
 @endif
 
@@ -32,10 +32,10 @@
 @if(!empty($vehicles_select_array))
 	@foreach($vehicles_select_array as $vehicles_select)
 		<h3>車両ID：{{ $vehicles_select["vehicle_id"] }}</h3>
-		<p>車両最大積載量：{{ $vehicles_select["vehicle_weight"] }}</p>
-		<p>車両積載サイズ上限：{{ $vehicles_select["vehicle_size"] }}</p>
+		<p>車両最大積載量：{{ $vehicles_select["vehicle_weight"] }}kg</p>
+		<p>車両積載サイズ上限：{{ $vehicles_select["vehicle_size"] }}m</p>
     	<p>資材名：{{ $vehicles_select["resource_name"] }}</p>
-    	<p>積み込み数：{{ $vehicles_select["resource_count"] }}</p>
+    	<p>積み込み数：{{ $vehicles_select["resource_count"] }}個</p>
 	@endforeach
 @endif
 

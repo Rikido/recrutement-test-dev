@@ -102,7 +102,7 @@ class ProjectsController extends Controller
         $project->file_path = $file;
         $project->save();
         // セッションを空にする、セッションから値を削除するときはforget()関数を使用
-        $request->session()->forget('input', 'file', 'file_name');
+        $request->session()->forget('project_input', 'project_file', 'file_name');
 
         return redirect()->action('ProjectsController@complete');
     }
