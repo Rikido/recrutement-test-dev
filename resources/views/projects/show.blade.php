@@ -1,4 +1,4 @@
-<h1>案件詳細画面</h1>
+<h1>進行プラン詳細画面</h1>
 
 <input type="button" onClick="location.href='/'" value="案件一覧へ" />
 
@@ -12,4 +12,3 @@
 <p>担当グループ：{{ $project->group->group_name }}</p>
 
 <input type="button" onClick="location.href='/project/{{ $project->id }}/progress_plan/resource'" value="進行プランを登録する" />
-
