@@ -131,7 +131,7 @@ class ProgressPlansController extends Controller
         // 利用資材入力画面で選択したデータのうち、大型資材のみ抽出して格納する配列
         $large_resource_stocks_array = [];
         // 利用資材入力画面で選択した資材に大型資材が含まれているか確認
-        foreach((array)$project_resources as $key => $project_resource) {
+        foreach((array)$project_resources as $project_resource) {
             $resource_id = $project_resource["resource_name"];
             $resource = Resource::find($resource_id);
             if($resource->resource_type == true) {
@@ -142,12 +142,12 @@ class ProgressPlansController extends Controller
         // [["location" => ID, "resource" => ID, "consumption_quantity" => 使用数], [], []...]の形式で値を格納
         $location_select_array = [];
         $index = 0;
-        foreach((array)$large_resource_stocks_array as $key => $large_resource_stock) {
+        foreach((array)$large_resource_stocks_array as $large_resource_stock) {
             // 利用資材入力画面で選択された資材マスタのidに一致するresource_stocksを全て取得し、在庫数が多い順に並べ替える
             $resource_stocks = DB::table('resource_stocks')->where('resource_id', $large_resource_stock["resource_name"])->orderBy('stock', 'DESC')->get();
             // resource_stocksをeach(連想配列の連想配列)
-            foreach((array)$resource_stocks as $key => $resource_stock_array) {
-                foreach((array)$resource_stock_array as $key => $resource_stock) {
+            foreach((array)$resource_stocks as $resource_stock_array) {
+                foreach((array)$resource_stock_array as $resource_stock) {
                     // 拠点IDを追加
                     $location_select_array[$index]["location"] = $resource_stock->location_id;
                     // 資材IDを追加
@@ -217,7 +217,7 @@ class ProgressPlansController extends Controller
         $vehicles_select_array = [];
         $index = 0;
         if(!empty($project_resources)) {
-            foreach((array)$project_resources as $key => $project_resource) {
+            foreach((array)$project_resources as $project_resource) {
                 // セッションから取り出した案件使用資材のresource_idからresource_stocksを取得する(複数あるが、weightとsizeはどれも同じ)
                 $resource_stock = ResourceStock::find($project_resource["resource_id"]);
                 // 大型資材のサイズを取得する
@@ -229,7 +229,7 @@ class ProgressPlansController extends Controller
                     // $vehiclesの連想配列から出たらもう一度車両の重量を更新する
                     if(!empty($vehicles_select_array)) {
                         // 車両一覧をeach
-                        foreach((array)$vehicles as $key => $vehicle) {
+                        foreach((array)$vehicles as $vehicle) {
                             // 使用する車両をeach
                             foreach((array)$vehicles_select_array as $i => $vehicles_select) {
                                 // 一覧の車両IDと使用する車両IDが一致する場合
@@ -240,7 +240,7 @@ class ProgressPlansController extends Controller
                             }
                         }
                     }
-                    foreach((array)$vehicles as $key => $vehicle) {
+                    foreach((array)$vehicles as $vehicle) {
                         // 使用する車両の情報を配列に格納する
                         $vehicles_select_array[$index]["vehicle_id"] = $vehicle["id"];
                         $vehicles_select_array[$index]["vehicle_weight"] = Vehicle::find($vehicle["id"])["max_weight"]; // 重量は更新されるので直接取得
@@ -292,7 +292,7 @@ class ProgressPlansController extends Controller
             array_push($task_users, $task_charge["user_id"]);
         }
         // ユーザーが持つ、今日以降のユーザー稼働日を昇順で全て取得する
-        $already_user_work_schedule = UserWorkSchedule::where('user_id', $task_users)->where('work_date', '>', $now_date)->orderBy('work_date', 'asc')->get()->toArray();
+        $already_user_work_schedule = UserWorkSchedule::whereIn('user_id', $task_users)->where('work_date', '>', $now_date)->orderBy('work_date', 'asc')->get()->toArray();
         // 使用する車両のIDを取得する
         $select_vehicles = [];
         foreach((array)$vehicles_select_array as $vehicle_array) {
@@ -302,7 +302,7 @@ class ProgressPlansController extends Controller
         $select_vehicles = collect($select_vehicles)->unique()->toArray();
         // 車両が持つ、今日以降の車両稼働日を昇順で全て取得する
         if(!empty($project_resources)) {
-            $already_vehicle_work_schedule = VehicleWorkSchedule::where('vehicle_id', $select_vehicles)->where('work_date', '>', $now_date)->orderBy('work_date', 'asc')->get()->toArray();
+            $already_vehicle_work_schedule = VehicleWorkSchedule::whereIn('vehicle_id', $select_vehicles)->where('work_date', '>', $now_date)->orderBy('work_date', 'asc')->get()->toArray();
         } else {
             $already_vehicle_work_schedule = [];
         }
@@ -415,8 +415,8 @@ class ProgressPlansController extends Controller
             foreach((array)$project_resources as $project_resource_data) {
                 $project_resource = new ProjectResource;
                 // 在庫の更新
-                $resource_stock = ResourceStock::where('resource_id', $project_resource_data["resource_id"])->where('location_id', $project_resource_data["location_id"])->get()->toArray();
-                $stock_update = (int)$resource_stock[0]["stock"] - (int)$project_resource_data["consumption_quantity"];
+                $resource_stock = ResourceStock::where('resource_id', $project_resource_data["resource_id"])->where('location_id', $project_resource_data["location_id"])->first()->toArray();
+                $stock_update = (int)$resource_stock["stock"] - (int)$project_resource_data["consumption_quantity"];
                 DB::table('resource_stocks')
                     ->where('resource_id', $project_resource_data["resource_id"])
                     ->where('location_id', $project_resource_data["location_id"])
@@ -447,16 +447,18 @@ class ProgressPlansController extends Controller
         $select_vehicles = collect($select_vehicles)->unique("vehicle_id")->toArray();
         // vehicle_work_schedulesの登録
         if(!empty($select_vehicles)) {
-            foreach((array)$select_vehicles as $key => $select_vehicle) {
+            $i = 0;
+            foreach((array)$select_vehicles as $select_vehicle) {
                 $vehicle_work_schedule = new VehicleWorkSchedule;
                 $vehicle_work_schedule->project_id = $project->id;
                 $vehicle_work_schedule->vehicle_id = $select_vehicle["vehicle_id"];
                 // もしタスクを担当するユーザーのIDを車両に全て割り当てたら
-                if(empty($task_users_array[$key])) {
+                if(empty($task_users_array[$i])) {
                     // 次の車両の担当者には進行プランを作成しているユーザーのIDを割り当てる（エラー回避）
-                    $task_users_array[$key] = Auth::user()->id;
+                    $task_users_array[$i] = Auth::user()->id;
                 }
-                $vehicle_work_schedule->user_id = $task_users_array[$key];
+                $vehicle_work_schedule->user_id = $task_users_array[$i];
+                $i++;
                 $vehicle_work_schedule->work_date = $implementation_date;
                 $vehicle_work_schedule->save();
             }
