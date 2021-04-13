@@ -41,5 +41,9 @@ Route::post('/project/{project}/progress_plan/comfirm', 'ProgressPlansController
 Route::get('/project/{project}/progress_plan/complete', 'ProgressPlansController@complete');
 // 設計書PDFファイルのダウンロード
 Route::get('/project/{project}/progress_plan/download', 'ProgressPlansController@download');
+// 工事検査完了
+Route::get('/project/{project}/task_charge/{task_charge_id}/create', 'TaskCompletesController@create');
+Route::post('/project/{project}/task_charge/{task_charge_id}/create', 'TaskCompletesController@register');
+Route::get('/project/{project}/task_charge/{task_charge_id}/complete', 'TaskCompletesController@complete');
 // ホーム
 Route::get('/home', 'HomeController@index')->name('home');
