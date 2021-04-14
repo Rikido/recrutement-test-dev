@@ -113,7 +113,7 @@ class ProjectsController extends Controller
         return view('projects.complete');
     }
 
-    // 案件詳細画面
+    // 進行プラン詳細画面
     public function show($id)
     {
         // 該当するレコードが見つからなかった場合は例外を投げ、キャッチできなければ404レスポンス
