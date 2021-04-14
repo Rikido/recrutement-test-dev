@@ -24,12 +24,14 @@
     @endforeach
 @endif
 
-@if(!empty(current((array)$project->task_charges)))
+@if(!empty(current((array)$project->project_resources)))
 	<h3>資材積込み拠点一覧</h3>
 	@foreach(current((array)$project->project_resources) as $project_resource)
-		<h4>拠点名：{{ $project_resource->location->location_name }}</h4>
-		<p>資材名：{{ $project_resource->resource->resource_name }}</p>
-		<p>積み込み数：{{ $project_resource->consumption_quantity }}</p>
+		@if(isset($project_resource->location))
+    		<h4>拠点名：{{ $project_resource->location->location_name }}</h4>
+    		<p>資材名：{{ $project_resource->resource->resource_name }}</p>
+    		<p>積み込み数：{{ $project_resource->consumption_quantity }}</p>
+		@endif
 	@endforeach
 @endif
 

@@ -19,7 +19,7 @@ class CreateProjectResourcesTable extends Migration
             $table->foreign('project_id')->references('id')->on('projects');
             $table->unsignedBigInteger('resource_id');
             $table->foreign('resource_id')->references('id')->on('resources');
-            $table->unsignedBigInteger('location_id');
+            $table->unsignedBigInteger('location_id')->nullable();
             $table->foreign('location_id')->references('id')->on('locations');
             $table->integer('consumption_quantity')->nullable();
             $table->timestamps();

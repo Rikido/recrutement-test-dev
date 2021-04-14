@@ -101,8 +101,26 @@ class ProgressPlansController extends Controller
         $request->session()->put('task_charge_input', $task_charges);
         // 利用資材入力画面でセッションに保存した値を取り出す
         $project_resources = $request->session()->get('project_resource_input');
+        // 小型資材の情報を格納する配列
+        $small_resources_array = [];
+        $i = 0;
+        // 小型資材の登録
+        foreach($project_resources as $project_resource) {
+            $resource_id = $project_resource["resource_name"];
+            $resource = Resource::find($resource_id);
+            if($resource->resource_type == false) {
+                $small_resources_array[$i]["project_id"] = $project->id;
+                $small_resources_array[$i]["resource_id"] = $resource["id"];
+                $small_resources_array[$i]["resource_name"] = $resource["resource_name"];
+                // ただし、小型資材の使用数はDBに登録しない
+                $small_resources_array[$i]["consumption_quantity"] = $project_resource["consumption_quantity"];
+                $i++;
+            }
+        }
+        // セッションへデータを保存
+        $request->session()->put('small_resources_input', $small_resources_array);
         // 利用資材入力画面で選択した資材に大型資材が含まれているか確認
-        foreach($project_resources as $key => $project_resource) {
+        foreach($project_resources as $project_resource) {
             // project_resourcesのresource_idを取得
             $resource_id = $project_resource["resource_name"];
             // 資材マスタデータの取得
@@ -383,13 +401,15 @@ class ProgressPlansController extends Controller
         $file_name = str_replace('public/', '', $project->file_path);
         // セッションから担当情報（project_id、task_name、user_id、outline、order、user_name）を取得する
         $task_charges = $request->session()->get('task_charge_input');
-        // セッションから案件使用資材情報（project_id、location_id、resource_id、consumption_quantity、location_name、resource_name）を取得する
+        // セッションから案件使用大型資材情報（project_id、location_id、resource_id、consumption_quantity、location_name、resource_name）を取得する
         $project_resources = $request->session()->get('resource_stocks_input');
+        // セッションから案件使用小型資材情報（project_id、resource_id、resource_name、consumption_quantity）を取得する
+        $project_small_resources = $request->session()->get('small_resources_input');
         // セッションから使用する車両情報（vehicle_id、vehicle_weight、vehicle_size、resource_count、resource_id、resource_name、resource_weight）を取得する
         $select_vehicles = $request->session()->get('vehicles_select_input');
         // セッションから工事実施日を取得する
         $implementation_date = $request->session()->get('implementation_date_input');
-        return view('progress_plans.comfirm', compact('project', 'file_name', 'task_charges', 'project_resources', 'select_vehicles', 'implementation_date'));
+        return view('progress_plans.comfirm', compact('project', 'file_name', 'task_charges', 'project_resources', 'project_small_resources', 'select_vehicles', 'implementation_date'));
     }
 
     // 入力値をデータベースへ登録する処理
@@ -398,6 +418,7 @@ class ProgressPlansController extends Controller
         // セッションから値を取得
         $task_charges = $request->session()->get('task_charge_input');
         $project_resources = $request->session()->get('resource_stocks_input');
+        $project_small_resources = $request->session()->get('small_resources_input');
         $select_vehicles = $request->session()->get('vehicles_select_input');
         $implementation_date = $request->session()->get('implementation_date_input');
         // task_chargesの登録
@@ -410,7 +431,7 @@ class ProgressPlansController extends Controller
             $task_charge->order = $task_charge_data["order"];
             $task_charge->save();
         }
-        // project_resourcesの登録
+        // project_resources（大型資材）の登録
         if(!empty($project_resources)) {
             foreach((array)$project_resources as $project_resource_data) {
                 $project_resource = new ProjectResource;
@@ -427,6 +448,15 @@ class ProgressPlansController extends Controller
                 $project_resource->resource_id = $project_resource_data["resource_id"];
                 $project_resource->location_id = $project_resource_data["location_id"];
                 $project_resource->consumption_quantity = $project_resource_data["consumption_quantity"];
+                $project_resource->save();
+            }
+        }
+        // project_resources（小型資材）の登録
+        if(!empty($project_small_resources)) {
+            foreach((array)$project_small_resources as $project_small_resource_data) {
+                $project_resource = new ProjectResource;
+                $project_resource->project_id = $project->id;
+                $project_resource->resource_id = $project_small_resource_data["resource_id"];
                 $project_resource->save();
             }
         }
@@ -464,7 +494,7 @@ class ProgressPlansController extends Controller
             }
         }
         // セッションに保存した値を削除
-        $request->session()->forget('project_resource_input', 'task_charge_input', 'vehicles_select_input', 'implementation_date_input', 'resource_stocks_input');
+        $request->session()->forget('project_resource_input', 'task_charge_input', 'vehicles_select_input', 'implementation_date_input', 'resource_stocks_input', 'small_resources_input');
         return redirect()->action('ProgressPlansController@complete', ['id' => $project->id]);
     }
 

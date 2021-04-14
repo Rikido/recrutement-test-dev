@@ -35,7 +35,10 @@
 		@foreach ($auths->groups as $auth_group)
 			{{-- ログインユーザーの所属するgroupとprojectのgroupが一致したら進行プランを作成可能 --}}
 			@if($auth_group->id === $project->group->id)
-				<input type="button" onClick="location.href='/project/{{ $project->id }}/progress_plan/resource'" value="進行プランを登録する" />
+				{{-- 担当情報を登録済みの場合は進行プランを作成できない --}}
+				@if(empty(current((array)$project->task_charges)))
+					<input type="button" onClick="location.href='/project/{{ $project->id }}/progress_plan/resource'" value="進行プランを登録する" />
+				@endif
 			@endif
 		@endforeach
 	@endforeach

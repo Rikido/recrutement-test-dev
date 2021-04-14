@@ -1,8 +1,7 @@
 <h1>グループ一覧画面</h1>
-<p>
-	登録されたグループを一覧表示する画面<br>
-	また、一覧にグループに所属するユーザー名を合わせて表示
-</p>
+
+<input type="button" onClick="location.href='/'" value="案件一覧へ戻る" />
+
 <div>
 	@foreach ($groups as $group)
 		<h4>

@@ -14,8 +14,8 @@
 	<p>実行順序：{{ $task_charge["order"] }}</p>
 @endforeach
 
-<h2>資材積込み拠点</h2>
 @if(!empty($project_resources))
+	<h2>資材積込み拠点</h2>
 	@foreach($project_resources as $project_resource)
 		<h3>拠点名：{{ $project_resource["location_name"] }}</h3>
     	<p>資材名：{{ $project_resource["resource_name"] }}</p>
@@ -23,8 +23,16 @@
 	@endforeach
 @endif
 
-<h2>使用車両一覧</h2>
+@if(!empty($project_small_resources))
+	<h2>案件使用小型資材一覧</h2>
+	@foreach($project_small_resources as $project_small_resource)
+    	<p>資材名：{{ $project_small_resource["resource_name"] }}</p>
+    	<p>使用数：{{ $project_small_resource["consumption_quantity"] }}個</p>
+	@endforeach
+@endif
+
 @if(!empty($select_vehicles))
+	<h2>使用車両一覧</h2>
 	@foreach($select_vehicles as $select_vehicle)
 		<h3>車両ID：{{ $select_vehicle["vehicle_id"] }}</h3>
 		<p>車両最大積載量：{{ $select_vehicle["vehicle_weight"] }}kg</p>
