@@ -25,7 +25,7 @@ class CreateTaskChargesTable extends Migration
             $table->unsignedTinyInteger('order');
             // ->nullable()オプションでNULL許容
             $table->text('report')->nullable();
-            $table->date('reported_at')->nullable();
+            $table->dateTime('reported_at')->nullable();
             $table->timestamps();
         });
     }

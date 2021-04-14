@@ -1,7 +1,6 @@
 <h1>利用資材入力画面</h1>
 
 <input type="button" onClick="location.href='/'" value="案件一覧へ戻る" />
-<input type="button" onClick="location.href='/project/{{ $project->id }}'" value="案件詳細へ戻る" />
 
 <h3>案件名：{{ $project->project_name }}</h3>
 <p>
