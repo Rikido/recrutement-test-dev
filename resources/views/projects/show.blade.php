@@ -14,7 +14,9 @@
     @foreach(current((array)$project->task_charges) as $task_charge)
     	<h4>
     		担当項目名：
-    		<a href="/project/{{ $project->id }}/task_charge/{{ $task_charge->id }}/create">
+    		<a @if($task_charge->user->id === $auths->id)
+    			href="/project/{{ $project->id }}/task_charge/{{ $task_charge->id }}/create"
+    		@endif>
     			{{ $task_charge->task_name }}
     		</a>
     	</h4>

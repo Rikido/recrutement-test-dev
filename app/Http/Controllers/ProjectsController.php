@@ -126,7 +126,7 @@ class ProjectsController extends Controller
             // projectの担当groupのidとログインユーザーが所属しているgroupのidを比較する
             if($auth_group->id === $project->group->id) {
                 // 一致すれば案件詳細画面へ
-                return view('projects.show', compact('project', 'file_name'));
+                return view('projects.show', compact('project', 'file_name', 'auths'));
             }
         }
         // 一致しなければ案件一覧画面へリダイレクト
