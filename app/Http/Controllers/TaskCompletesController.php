@@ -23,4 +23,13 @@ class TaskCompletesController extends Controller
         // 一致しなければ進行プラン詳細画面へリダイレクト
         return redirect()->action('ProjectsController@show', ['id' => $project->id]);
     }
+
+    // 工事担当箇所実施報告画面の入力値を登録する処理
+    public function register($project_id, $task_charge_id, Request $request) {
+    }
+
+    // 工事担当箇所実施報告提出完了画面
+    public function complete() {
+        return view('task_completes.complete');
+    }
 }
