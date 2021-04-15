@@ -34,9 +34,8 @@ class ProgressPlansController extends Controller
     // 利用資材入力画面の入力値をセッションに登録する処理
     public  function resource_post($id, Request $request) {
         $project = Project::findOrFail($id);
-        // 入力値の取得
         $project_resource_input = $request->input('project_resources');
-        // 多次元配列$project_resource_inputから空の配列を削除する
+        // $project_resource_inputから空の配列を削除する
         // array_filterの第一引数にコールバック関数に渡す配列を指定、第二引数にコールバック関数を指定
         // 戻り値には、コールバック関数でフィルタリングされた結果の配列を返す
         $project_resource_name = array_filter($project_resource_input, function($array){
@@ -44,12 +43,11 @@ class ProgressPlansController extends Controller
             return $array['resource_name'];
         });
         $project_resource = array_filter($project_resource_name, function($array){
-            // $project_resource_input内の各配列のconsumption_quantityのnullを確認
             return $array['consumption_quantity'];
         });
-        // セッションへデータを保存
+
         $request->session()->put('project_resource_input', $project_resource);
-        // 担当割当画面に遷移
+
         return redirect()->action('ProgressPlansController@task_charge', ['id' => $project->id]);
     }
 
@@ -57,7 +55,6 @@ class ProgressPlansController extends Controller
     public function download($id) {
         $project = Project::findOrFail($id);
         $auths = Auth::user();
-        // pdfファイル名取得
         $file_name = str_replace('public/', '', $project->file_path);
         // storage_pathでstorageディレクトリのフルパスを取得し、pdfファイルのパスを生成
         // /var/www/lamp/storage/app/public/pdfファイル名
@@ -91,14 +88,12 @@ class ProgressPlansController extends Controller
         $task_charges = array_filter($outline_check, function($array){ return $array['order']; });
 
         foreach($task_charges as $index => $task_charge) {
-            // 担当するユーザーのレコードを取得
             $task_user = User::find($task_charge["user_id"]);
             // 担当するユーザーの名前を格納
             $task_charges[$index]["user_name"] = $task_user->name;
         }
-        // セッションへデータを保存
+
         $request->session()->put('task_charge_input', $task_charges);
-        // 利用資材入力画面でセッションに保存した値を取り出す
         $project_resources = $request->session()->get('project_resource_input');
         // 小型資材の情報を格納する配列
         $small_resources_array = [];
@@ -116,13 +111,12 @@ class ProgressPlansController extends Controller
                 $i++;
             }
         }
-        // セッションへデータを保存
+
         $request->session()->put('small_resources_input', $small_resources_array);
         // 利用資材入力画面で選択した資材に大型資材が含まれているか確認
         foreach($project_resources as $project_resource) {
-            // project_resourcesのresource_idを取得
+            // project_resourcesのresource_idを取得(resource_name = id)
             $resource_id = $project_resource["resource_name"];
-            // 資材マスタデータの取得
             $resource = Resource::find($resource_id);
             // 資材マスタデータのresource_typeを確認
             if($resource->resource_type == true) {
@@ -141,9 +135,7 @@ class ProgressPlansController extends Controller
     // 大型資材積込み拠点選択画面
     public function location($id, Request $request) {
         $project = Project::findOrFail($id);
-        // 大型資材在庫を全て取得する
         $resource_stocks_index = ResourceStock::all();
-        // 利用資材入力画面でセッションに保存した値を取り出す
         $project_resources = $request->session()->get('project_resource_input');
         // 利用資材入力画面で選択したデータのうち、大型資材のみ抽出して格納する配列
         $large_resource_stocks_array = [];
@@ -156,13 +148,13 @@ class ProgressPlansController extends Controller
                 array_push($large_resource_stocks_array, $project_resource);
             }
         };
-        // [["location" => ID, "resource" => ID, "consumption_quantity" => 使用数], [], []...]の形式で値を格納
+        // 拠点情報、資材情報、使用数を格納する配列
         $location_select_array = [];
         $index = 0;
         foreach((array)$large_resource_stocks_array as $large_resource_stock) {
             // 利用資材入力画面で選択された資材マスタのidに一致するresource_stocksを全て取得し、在庫数が多い順に並べ替える
             $resource_stocks = DB::table('resource_stocks')->where('resource_id', $large_resource_stock["resource_name"])->orderBy('stock', 'DESC')->get();
-            // resource_stocksをeach(連想配列の連想配列)
+
             foreach((array)$resource_stocks as $resource_stock_array) {
                 foreach((array)$resource_stock_array as $resource_stock) {
                     // 拠点IDを追加
@@ -179,7 +171,7 @@ class ProgressPlansController extends Controller
                         $index++;
                     // 在庫分で使用数を満たした場合
                     } else {
-                        // 必要数を格納する(入力値はstringなのでintegerにキャスト)
+                        // 必要数を格納する
                         $location_select_array[$index]["consumption_quantity"] = (int)$large_resource_stock["consumption_quantity"];
                         $index++;
                         // breakで外側のループもまとめてスキップ
@@ -194,22 +186,19 @@ class ProgressPlansController extends Controller
     // 大型資材積込み拠点選択画面の入力値をセッションに登録する処理
     public function location_post($id, Request $request) {
         $project = Project::findOrFail($id);
-        // 入力値を取得
         $resource_stocks_input = $request->input('resource_stocks');
         // consumption_quantityが空の配列を取り除く
         $resource_stocks_input = array_filter($resource_stocks_input, function($array){ return $array['consumption_quantity']; });
 
         foreach($resource_stocks_input as $index => $resource_stock) {
-            // 選択した拠点のレコードを取得
             $select_location = Location::find($resource_stock["location_id"]);
-            // 選択した資材のレコードを取得
             $select_resource = Resource::find($resource_stock["resource_id"]);
             // 選択した拠点の名前を取得
             $resource_stocks_input[$index]["location_name"] = $select_location->location_name;
             // 選択した資材の名前を取得
             $resource_stocks_input[$index]["resource_name"] = $select_resource->resource_name;
         }
-        // セッションへデータを保存
+
         $request->session()->put('resource_stocks_input', $resource_stocks_input);
         // 工事実施日程の表示画面へ遷移
         return redirect()->action('ProgressPlansController@scheduled_date', ['id' => $project->id]);
@@ -219,11 +208,8 @@ class ProgressPlansController extends Controller
     public function scheduled_date($id, Request $request) {
         $project = Project::findOrFail($id);
         $file_name = str_replace('public/', '', $project->file_path);
-        // セッションへ保存した担当情報を取り出す
         $task_charges = $request->session()->get('task_charge_input');
-        // 案件使用資材が空ではない場合
         if(!empty($request->session()->get('resource_stocks_input'))) {
-            // セッションへ保存した案件使用資材を取り出す
             $project_resources = $request->session()->get('resource_stocks_input');
         } else {
             $project_resources = [];
@@ -241,13 +227,11 @@ class ProgressPlansController extends Controller
                 $resource_size = $resource_stock["size"];
                 // 大型資材のサイズ以上の積載サイズ上限を持つ車両を全て取得し、積載サイズ上限が小さい順に並べ替える
                 $vehicles_index = Vehicle::where("max_size", ">=", $resource_size)->orderBy('max_size', 'asc')->get();
-                // 連想配列の連想配列
+
                 foreach((array)$vehicles_index as $vehicles) {
                     // $vehiclesの連想配列から出たらもう一度車両の重量を更新する
                     if(!empty($vehicles_select_array)) {
-                        // 車両一覧をeach
                         foreach((array)$vehicles as $vehicle) {
-                            // 使用する車両をeach
                             foreach((array)$vehicles_select_array as $i => $vehicles_select) {
                                 // 一覧の車両IDと使用する車両IDが一致する場合
                                 if($vehicle["id"] == $vehicles_select["vehicle_id"]) {
@@ -378,7 +362,7 @@ class ProgressPlansController extends Controller
                 $implementation_date = max($user_work_date, $vehicle_work_date);
             }
         }
-        // セッションへデータを保存
+
         $request->session()->put('vehicles_select_input', $vehicles_select_array);
         return view('progress_plans.scheduled_date', compact('project', 'file_name', 'task_charges', 'project_resources', 'vehicles_select_array', 'implementation_date'));
     }
@@ -388,7 +372,6 @@ class ProgressPlansController extends Controller
         $project = Project::findOrFail($id);
         // 工事実行日を取得
         $implementation_date = $request->input('implementation_date');
-        // セッションへデータを保存
         $request->session()->put('implementation_date_input', $implementation_date);
         // 作成進行プラン内容確認画面へ遷移
         return redirect()->action('ProgressPlansController@comfirm', ['id' => $project->id]);
@@ -481,9 +464,7 @@ class ProgressPlansController extends Controller
                 $vehicle_work_schedule = new VehicleWorkSchedule;
                 $vehicle_work_schedule->project_id = $project->id;
                 $vehicle_work_schedule->vehicle_id = $select_vehicle["vehicle_id"];
-                // もしタスクを担当するユーザーのIDを車両に全て割り当てたら
                 if(empty($task_users_array[$i])) {
-                    // 次の車両の担当者には進行プランを作成しているユーザーのIDを割り当てる（エラー回避）
                     $task_users_array[$i] = Auth::user()->id;
                 }
                 $vehicle_work_schedule->user_id = $task_users_array[$i];
@@ -492,7 +473,7 @@ class ProgressPlansController extends Controller
                 $vehicle_work_schedule->save();
             }
         }
-        // セッションに保存した値を削除
+
         $request->session()->forget('project_resource_input', 'task_charge_input', 'vehicles_select_input', 'implementation_date_input', 'resource_stocks_input', 'small_resources_input');
         return redirect()->action('ProgressPlansController@complete', ['id' => $project->id]);
     }
