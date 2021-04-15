@@ -16,30 +16,24 @@
 	@endif
 @endforeach
 
-{{-- 利用資材の入力 --}}
 <form method="post" action="/project/{{ $project->id }}/progress_plan/resource">
 	@csrf
 
 	{{-- 1案件で登録できる利用資材は10項目までなので、フォームを10件分表示する --}}
 	@for($i = 0; $i < 10; $i++)
-		{{-- 変数名の最後に[]をつけることでフォームの内容が配列として扱われる --}}
 		<label for="project_resources[{{ $i }}][resource_name]">{{ $i + 1 }}_資材選択</label>
 		<div>
-			{{-- resourcesのresource_nameを選択する --}}
 			<select name="project_resources[{{ $i }}][resource_name]" >
 				<option value="">選択してください</option>
 				@foreach($resources as $resource)
-					{{-- selectタグのname属性の値をold()関数の引数に指定 --}}
 					<option value="{{ $resource->id }}" @if(old("project_resources.$i.resource_name") == $resource->id) selected @endif>
 						{{ $resource->resource_name }}
 					</option>
 				@endforeach
 			</select>
 		</div>
-		{{-- project_resoucesのconsumption_quantityを選択する --}}
 		<label for="project_resources[{{ $i }}][consumption_quantity]">{{ $i + 1 }}_使用数</label>
 		<div>
-			{{-- inputタグは、name属性の値をold()関数の引数に入れる --}}
 			<input type="number" min="1" name="project_resources[{{ $i }}][consumption_quantity]" value="{{ old("project_resources.$i.consumption_quantity") }}">
 		</div>
 	@endfor

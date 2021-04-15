@@ -23,7 +23,6 @@ class CreateTaskChargesTable extends Migration
             $table->string('outline');
             // 実施順序(order)は1〜20の範囲のみ
             $table->unsignedTinyInteger('order');
-            // ->nullable()オプションでNULL許容
             $table->text('report')->nullable();
             $table->dateTime('reported_at')->nullable();
             $table->timestamps();

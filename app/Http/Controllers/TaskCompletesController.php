@@ -10,6 +10,10 @@ use Illuminate\Support\Facades\Auth;
 
 class TaskCompletesController extends Controller
 {
+    public function __construct(){
+        $this->middleware('auth');
+    }
+
     // 工事担当箇所実施報告画面
     public function create($project_id, $task_charge_id) {
         $project = Project::findOrFail($project_id);

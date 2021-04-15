@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Database\Seeder;
-// 追記
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Support\Str;

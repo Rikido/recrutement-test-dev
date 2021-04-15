@@ -7,7 +7,6 @@
 <div>
 	@foreach ($projects as $project)
 		<h3>
-			{{-- ログインユーザーの所属するgroupを取り出す --}}
 			<a @foreach ($auths->groups as $auth_group)
 				{{-- ログインユーザーの所属するgroupとprojectのgroupが一致したら詳細画面のリンクを取得 --}}
 				@if($auth_group->id === $project->group->id)

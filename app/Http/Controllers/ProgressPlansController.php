@@ -27,7 +27,6 @@ class ProgressPlansController extends Controller
         $project = Project::findOrFail($id);
         $auths = Auth::user();
         $file_name = str_replace('public/', '', $project->file_path);
-        // 資材マスタを全て取得する
         $resources = Resource::all();
         return view('progress_plans.resource', compact('project', 'file_name', 'auths', 'resources'));
     }

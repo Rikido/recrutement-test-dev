@@ -13,23 +13,21 @@ class ProjectsController extends Controller
         $this->middleware('auth');
     }
 
-    // 登録データ([フォーム名])
+    // 登録データ
     private $projectContents = ['project_name', 'group_id', 'outline'];
 
     // バリデーション情報
     private $validator = [
-        // requiredで入力必須
         'project_name' => 'required|string|max:100',
         'group_id' => 'required|integer',
         'outline' => 'required|string|max:255',
-        // mimesでファイルが指定された拡張子かどうか判定する
         'file_path' => 'required|file|mimes:pdf',
     ];
 
     // 案件一覧画面
     public function index()
     {
-        $projects = Project::with('group')->get();
+        $projects = Project::all();
         $auths = Auth::user();
         return view('projects.index', compact('projects', 'auths'));
     }
@@ -37,7 +35,6 @@ class ProjectsController extends Controller
     // 案件登録画面
     public function create()
     {
-        // ログインユーザーが所属しているgroupを全て取得
         $auth_user_groups = auth()->user()->groups;
         return view('projects.create', compact('auth_user_groups'));
     }
@@ -101,7 +98,7 @@ class ProjectsController extends Controller
         $project->outline = $input['outline'];
         $project->file_path = $file;
         $project->save();
-        // セッションを空にする、セッションから値を削除するときはforget()関数を使用
+
         $request->session()->forget('project_input', 'project_file', 'file_name');
 
         return redirect()->action('ProjectsController@complete');
