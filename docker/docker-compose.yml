@@ -15,13 +15,13 @@ services:
       dockerfile: DockerFile-web
       args:
         - app_name=*app_name
+    platform: linux/x86_64
     container_name: lamp_web
     privileged: true
     command: /sbin/init
     ports:
       - 81:80
       - 3307:3306
-      
     environment:
         *default_environment
     volumes:
