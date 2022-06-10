@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateProjectsTable extends Migration
+class CreateGroupUsersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,10 @@ class CreateProjectsTable extends Migration
      */
     public function up()
     {
-        Schema::create('projects', function (Blueprint $table) {
+        Schema::create('group_users', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('project_name');
-            $table->foreign('group_id')->references('id')->on('groups');
-            $table->text('outline');
-            $table->string('file_path');
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('group_id');
             $table->timestamps();
         });
     }
@@ -30,6 +28,6 @@ class CreateProjectsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('projects');
+        Schema::dropIfExists('group_users');
     }
 }
