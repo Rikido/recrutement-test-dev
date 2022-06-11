@@ -10,6 +10,11 @@ class User extends Authenticatable
 {
     use Notifiable;
 
+    public  function groups()
+    {
+        return $this->belongsToMany('App\Group', 'group_users')->withTimestamps();
+    }
+
     /**
      * The attributes that are mass assignable.
      *
