@@ -20,5 +20,13 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/groups', 'GroupsController@index');
 
-Route::get('/projects', 'ProjectsController@index');
 
+
+Route::prefix('projects')->group(function() {
+    Route::get('/', 'ProjectsController@index');
+    Route::get('create', 'ProjectsController@create');
+    Route::post('create', 'ProjectsController@store');
+    Route::get('{project}', 'ProjectsController@show');
+    Route::get('confirm', 'ProjectsController@confirm');
+    Route::get('complete', 'ProjectsController@complete');
+});
