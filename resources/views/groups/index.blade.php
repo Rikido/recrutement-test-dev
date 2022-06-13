@@ -1,3 +1,6 @@
+@extends('layouts.app')
+
+@section('content')
 <div class =container>
   <div>
     <h1>グループ一覧画面</h1>
@@ -13,3 +16,4 @@
     @endforeach
   </div>
 </div>
+@endsection

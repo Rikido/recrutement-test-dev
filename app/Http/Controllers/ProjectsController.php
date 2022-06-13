@@ -25,6 +25,12 @@ class ProjectsController extends Controller
     public function create() {
         //ログインユーザーが所属しているgroup
         $auth_user_groups = auth()->user()->groups;
+
+        /*foreach($auth_user_groups as $auth_user_group){
+            var_dump($auth_user_group->group_name);
+        }
+        exit;
+        dd($auth_user_groups[0]->group_name);*/
         return view('projects/create', compact('auth_user_groups'));
     }
 
@@ -32,18 +38,26 @@ class ProjectsController extends Controller
     public function store(Request $request) {
         //データ取得
         $input = $request->only($this->projectInput);
-        //
+        $project = new Project();
+        $project->project_name = $input["project_name"];
+        $project->group_id= $input["group_id"];
+        $project->outline = $input["outline"];
+        $project->file_path = "";
+        $project->save();
+
         return redirect()->action('ProjectsController@confirm');
+
     }
 
     //案件詳細
     public function show($id) {
-        return view('projects.show', compact('project'));
+        return view('projects/show', compact('project'));
     }
 
     //作成案件確認
     public function confirm(Request $request) {
-        return view('projects/comfirm');
+
+        return view('projects/confirm');
     }
 
     //案件作成完了

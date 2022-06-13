@@ -24,6 +24,9 @@
       <div class="form-group">
         <label for="group">担当グループ</label>
         <select name="group_id" class="form-control">
+          @foreach($auth_user_groups as $auth_user_group)
+          <option value="{{$auth_user_group->id}}">{{$auth_user_group->group_name}}</option>
+          @endforeach
         </select>
       </div>
       <button type="submit" class="btn btn-primary">作成確認画面へ</button>
