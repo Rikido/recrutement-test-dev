@@ -12,35 +12,42 @@ class ProjectsController extends Controller
         $this->middleware('auth');
     }
 
+    private $projectInput = ['project_name', 'group_id', 'outline'];
+
     //案件一覧
     public function index()
     {
         $projects = Project::with('group')->get();
-        return view('projects.index', [ 'projects' => $projects ]);
+        return view('projects/index', [ 'projects' => $projects ]);
     }
 
     //案件登録
     public function create() {
-        //
+        //ログインユーザーが所属しているgroup
+        $auth_user_groups = auth()->user()->groups;
+        return view('projects/create', compact('auth_user_groups'));
     }
 
     //案件登録の値を保存
     public function store(Request $request) {
+        //データ取得
+        $input = $request->only($this->projectInput);
         //
+        return redirect()->action('ProjectsController@confirm');
     }
 
     //案件詳細
     public function show($id) {
-        //
+        return view('projects.show', compact('project'));
     }
 
     //作成案件確認
-    public function confirm() {
-        //
+    public function confirm(Request $request) {
+        return view('projects/comfirm');
     }
 
     //案件作成完了
     public function complete() {
-        return view('projects.complete');
+        return view('projects/complete');
     }
 }
