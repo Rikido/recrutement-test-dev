@@ -69,7 +69,6 @@ class ProjectsController extends Controller
             return redirect('/projects/create');
         }
 
-
         //データ保存
         $project = new Project;
         $project->project_name = $input["project_name"];
