@@ -26,7 +26,8 @@ Route::prefix('projects')->group(function() {
     Route::get('/', 'ProjectsController@index');
     Route::get('create', 'ProjectsController@create');
     Route::post('create', 'ProjectsController@store');
-    Route::get('{project}', 'ProjectsController@show');
     Route::get('confirm', 'ProjectsController@confirm');
+    Route::post('confirm', 'ProjectsController@confirmStore');
     Route::get('complete', 'ProjectsController@complete');
+    Route::get('{project}', 'ProjectsController@show');
 });

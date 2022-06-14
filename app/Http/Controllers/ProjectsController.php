@@ -18,6 +18,7 @@ class ProjectsController extends Controller
     public function index()
     {
         $projects = Project::with('group')->get();
+
         return view('projects/index', [ 'projects' => $projects ]);
     }
 
@@ -36,32 +37,57 @@ class ProjectsController extends Controller
 
     //案件登録の値を保存
     public function store(Request $request) {
-        //データ取得
+        //入力データ取得
         $input = $request->only($this->projectInput);
-        $project = new Project();
-        $project->project_name = $input["project_name"];
-        $project->group_id= $input["group_id"];
-        $project->outline = $input["outline"];
-        $project->file_path = "";
-        $project->save();
+        $path = $request->file('file_path')->store('public/project_pdf');
+        $request->session()->put(["project_input" => $input, "projectPdf" => $path]);
 
-        return redirect()->action('ProjectsController@confirm');
-
+        return redirect('/projects/confirm');
     }
 
     //案件詳細
     public function show($id) {
+
         return view('projects/show', compact('project'));
     }
 
     //作成案件確認
     public function confirm(Request $request) {
+        // セッションから値を取り出す
+        $input = $request->session()->get('project_input');
+        $path = $request->session()->get("projectPdf");
 
-        return view('projects/confirm');
+        return view('projects/confirm', compact('input', 'path'));
     }
+
+    public function confirmStore(Request $request) {
+        //リクエストから値を取り出す
+        $input = $request->session()->get("project_input");
+        $path = $request->session()->get("projectPdf");
+
+        if ($request->get('back')) {
+            return redirect('/projects/create');
+        }
+
+
+        //データ保存
+        $project = new Project;
+        $project->project_name = $input["project_name"];
+        $project->group_id= $input["group_id"];
+        $project->outline = $input["outline"];
+        $project->file_path = $path;
+        $project->save();
+
+        // セッションを空にする
+        $request->session()->forget('input', 'path');
+
+        return redirect('/projects/complete');
+    }
+
 
     //案件作成完了
     public function complete() {
+
         return view('projects/complete');
     }
 }
