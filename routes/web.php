@@ -21,7 +21,6 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/groups', 'GroupsController@index');
 
 
-
 Route::prefix('projects')->group(function() {
     Route::get('/', 'ProjectsController@index');
     Route::get('create', 'ProjectsController@create');
@@ -31,3 +30,5 @@ Route::prefix('projects')->group(function() {
     Route::get('complete', 'ProjectsController@complete');
     Route::get('{id}', 'ProjectsController@show');
 });
+
+Route::get('/project/{id}/progress_plan/resource', 'ProgressPlansController@resource');
