@@ -18,7 +18,7 @@
       </thead>
       <tbody>
         <tr>
-          <th><a href="{{ url('project', $project->id) }}">{{ $project->project_name }}</a></th>
+          <th><a href="{{ url('projects', $project->id) }}">{{ $project->project_name }}</a></th>
           <td>{{ $project->outline }}</td>
           <td>{{ $project->group->group_name }}</td>
         </tr>

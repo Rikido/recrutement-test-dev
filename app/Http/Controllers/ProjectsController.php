@@ -47,7 +47,7 @@ class ProjectsController extends Controller
 
     //案件詳細
     public function show($id) {
-
+        $project = Project::with('task_charges', 'project_resources')->find($id);
         return view('projects/show', compact('project'));
     }
 

@@ -29,5 +29,5 @@ Route::prefix('projects')->group(function() {
     Route::get('confirm', 'ProjectsController@confirm');
     Route::post('confirm', 'ProjectsController@confirmStore');
     Route::get('complete', 'ProjectsController@complete');
-    Route::get('{project}', 'ProjectsController@show');
+    Route::get('{id}', 'ProjectsController@show');
 });
