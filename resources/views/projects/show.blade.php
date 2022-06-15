@@ -7,7 +7,10 @@
   <a href="/storage/{{ $project->file_path }}" target="_blank" rel="noopener noreferrer">{{ $project->project_name }}設計書PDF</a>
   <p>担当グループ:{{ $project->group->group_name }}</p>
 
+  <div>
+    <a href="/project/{{ $project->id }}/progress_plan/resource">進行計画登録画面</a>
+  </div>
+
 </div>
 
 @endsection
-
