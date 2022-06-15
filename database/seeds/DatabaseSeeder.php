@@ -28,5 +28,7 @@ class DatabaseSeeder extends Seeder
                   $users->random(rand(3,5))->pluck('id')->toArray()
               );
           });
+
+          $this->call(ResourcesTableSeeder::class);
     }
 }
