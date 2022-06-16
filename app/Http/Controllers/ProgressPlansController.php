@@ -10,6 +10,8 @@ use App\ResourceStock;
 use App\TaskCharge;
 use App\User;
 use App\Group;
+use App\Location;
+use App\ProjectResource;
 
 
 class ProgressPlansController extends Controller
@@ -37,6 +39,7 @@ class ProgressPlansController extends Controller
         });
 
         $request->session()->put('project_resource_input', $project_resource);
+        //dd($project_resource);
 
         return redirect()->action('ProgressPlansController@task_charge', ['id' => $project->id]);
     }
@@ -49,7 +52,39 @@ class ProgressPlansController extends Controller
 
     //担当割当の値を保存
     public function task_chargeStore($id, Request $request) {
-        //
+        $project = Project::with('group.users')->find($id);
+        $task_charges_input = $request->input('task_charges');
+        // task_chargeから空の配列を削除する
+        //foreach内でunsetを使って特定の要素を削除する
+        foreach( (array)$task_charges_input as $task_charge => $task_charge_copy)
+        {
+            if( $task_charge_copy["task_name"] == null) unset($task_charge[$task_charge]);
+        }
 
+        $project_resources = $request->session()->get('project_resource_input');
+
+        // 利用資材入力画面で選択した資材に大型資材が含まれているか
+        foreach($project_resources as $project_resource) {
+            $resource_id = $project_resource["resource_name"];
+            $resource = Resource::find($resource_id);
+            // resource_type=true 大型
+            if($resource->resource_type == true) {
+                //大型資材積込み拠点選択画面へ
+                return redirect()->action('ProgressPlansController@location', ['id' => $project->id]);
+            }
+        };
+        // なければ工事実施日程の表示画面へ
+        return redirect()->action('ProgressPlansController@work_schedule', ['id' => $project->id]);
     }
+
+    //大型資材積込み拠点選択
+    public function location() {
+        //
+    }
+
+    public function work_schedule() {
+        //
+        return view('progress_plans/work_schedule');
+    }
+
 }

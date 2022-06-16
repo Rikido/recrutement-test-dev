@@ -36,3 +36,7 @@ Route::get('/project/{id}/progress_plan/resource', 'ProgressPlansController@reso
 Route::post('/project/{id}/progress_plan/resource', 'ProgressPlansController@resourceStore');
 Route::get('/project/{id}/progress_plan/task_charge', 'ProgressPlansController@task_charge');
 Route::post('/project/{id}/progress_plan/task_charge', 'ProgressPlansController@task_chargeStore');
+Route::get('/project/{id}/progress_plan/location', 'ProgressPlansController@location');
+
+Route::get('/project/{id}/progress_plan/work_schedule', 'ProgressPlansController@work_schedule');
+
