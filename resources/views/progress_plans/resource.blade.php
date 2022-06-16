@@ -11,7 +11,7 @@
     </a>
   </div>
 
-  <form method="post" action="{{ url('progress_plan/task_charges') }}">
+  <form method="post" action="/project/{{ $project->id }}/progress_plan/resource">
     @csrf
     {{-- 1案件で登録する利用資材は最大10項目まで --}}
     @for($i = 0; $i < 10; $i++)

@@ -31,5 +31,8 @@ Route::prefix('projects')->group(function() {
     Route::get('{id}', 'ProjectsController@show');
 
 });
+
 Route::get('/project/{id}/progress_plan/resource', 'ProgressPlansController@resource');
 Route::post('/project/{id}/progress_plan/resource', 'ProgressPlansController@resourceStore');
+Route::get('/project/{id}/progress_plan/task_charge', 'ProgressPlansController@task_charge');
+Route::post('/project/{id}/progress_plan/task_charge', 'ProgressPlansController@task_chargeStore');
