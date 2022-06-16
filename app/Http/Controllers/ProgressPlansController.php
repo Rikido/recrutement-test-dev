@@ -78,11 +78,12 @@ class ProgressPlansController extends Controller
     }
 
     //大型資材積込み拠点選択
-    public function location() {
-        //
+    public function location($id, Request $request) {
+
+        return view('progress_plans/location');
     }
 
-    public function work_schedule() {
+    public function work_schedule($id, Request $request) {
         //
         return view('progress_plans/work_schedule');
     }
