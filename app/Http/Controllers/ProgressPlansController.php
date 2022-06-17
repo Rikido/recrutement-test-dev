@@ -100,4 +100,19 @@ class ProgressPlansController extends Controller
         return view('progress_plans/work_schedule');
     }
 
+    public function confirm() {
+        //
+        return view('progress_plans/confirm');
+    }
+
+    public function confirmStore() {
+        //
+        return redirect()->action('ProgressPlansController@complete');
+    }
+
+    public function complete() {
+        //
+        return view('progress_plans/complete');
+    }
+
 }

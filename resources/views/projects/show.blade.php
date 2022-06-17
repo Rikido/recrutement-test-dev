@@ -2,15 +2,30 @@
 
 @section('content')
 <div class = 'container'>
-  <h3>案件名:{{ $project->project_name }}</h3>
-  <h3>案件概要:{{ $project->outline }}</h3>
-  <a href="/storage/{{ $project->file_path }}" target="_blank" rel="noopener noreferrer">{{ $project->project_name }}設計書PDF</a>
-  <p>担当グループ:{{ $project->group->group_name }}</p>
-
   <div>
-    <a href="/project/{{ $project->id }}/progress_plan/resource">進行計画登録画面</a>
-  </div>
+    <div class="form-group">
+      <label for="name">案件名</label>
+      <span class="form-control">{{ $project->project_name }}</span>
+    </div>
+    <div class="form-group">
+      <label for="outline">案件概要</label>
+      <textarea rows="6" cols="100" name="outline" class="form-control">{{ $project->outline }}</textarea>
+    </div>
+    <div class="form-group">
+      <label for="file_path">設計書PDF</label>
+      <span class="form-control">
+      <a href="/storage/{{ $project->file_path }}" target="_blank" rel="noopener noreferrer">{{ $project->project_name }}</a>
+      </span>
+    </div>
+    <div class="form-group">
+      <label for="group_name">担当グループ</label>
+      <span class="form-control">{{ $project->group->group_name }}</span>
+    </div>
+    <div>
+      <a href="/project/{{ $project->id }}/progress_plan/resource" class="btn btn-secondary">進行計画登録画面</a>
+    </div>
 
-</div>
+  </div>
+ </div>
 
 @endsection

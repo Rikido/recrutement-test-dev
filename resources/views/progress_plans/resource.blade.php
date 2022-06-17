@@ -2,7 +2,7 @@
 
 @section('content')
 <div class = 'container'>
-  <h1>利用資材入力画面</h1>
+  <h3 class="text-center">利用資材入力画面</h3>
   <p>案件概要：{{ $project->outline }}</p>
 
   <div>
@@ -15,27 +15,40 @@
     @csrf
     {{-- 1案件で登録する利用資材は最大10項目まで --}}
     @for($i = 0; $i < 10; $i++)
-      <label for="project_resources[{{ $i }}][resource_name]">{{ $i + 1 }}.利用資材選択</label>
-      <div>
-      <select name="project_resources[{{ $i }}][resource_name]">
-        <option value="">選択してください</option>
-        @foreach($resources as $resource)
-          <option value="{{ $resource->id }}" @if(old("project_resources.$i.resource_name") == $resource->id) selected @endif>
-            {{ $resource->resource_name }}
-          </option>
-        @endforeach
-      </select>
-      </div>
-      <div>
-        <label for="project_resources[{{ $i }}][consumption_quantity]">{{ $i + 1 }}.使用数</label>
-      </div>
-      <div>
-        <input name="project_resources[{{ $i }}][consumption_quantity]" value="{{ old("project_resources.$i.consumption_quantity") }}">
-      </div>
+      <table class="table">
+      <thead>
+        <tr>
+          <th>
+            <label for="project_resources[{{ $i }}][resource_name]">{{ $i + 1 }}.利用資材選択</label>
+          </th>
+          <th>
+            <label for="project_resources[{{ $i }}][consumption_quantity]">{{ $i + 1 }}.使用数</label>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th>
+            <select name="project_resources[{{ $i }}][resource_name]">
+              <option value="">選択してください</option>
+              @foreach($resources as $resource)
+                <option value="{{ $resource->id }}" @if(old("project_resources.$i.resource_name") == $resource->id) selected @endif>
+                  {{ $resource->resource_name }}
+                </option>
+              @endforeach
+            </select>
+          </th>
+          <th>
+            <input name="project_resources[{{ $i }}][consumption_quantity]" value="{{ old("project_resources.$i.consumption_quantity") }}">
+          </th>
+        </tr>
+      </tbody>
+    </table>
     @endfor
-    <button type="submit" class="btn btn-primary mt-3">次へ</button>
+    <div class="d-flex justify-content-end">
+      <button type="submit" class="btn btn-primary">次へ</button>
+    </div>
   </form>
-
 </div>
 
 @endsection

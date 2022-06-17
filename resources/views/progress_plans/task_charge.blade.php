@@ -2,7 +2,7 @@
 
 @section('content')
 <div class = 'container'>
-  <h1>担当割当</h1>
+  <h3 class="text-center">担当割当</h3>
 
   <div>
     <a href="/storage/{{ $project->file_path }}" target="_blank" rel="noopener noreferrer">
@@ -15,31 +15,50 @@
     @csrf
     {{-- 1案件で登録する担当項目は最大20項目まで --}}
     @for($i = 0; $i < 20; $i++)
-      <label for="task_charge[{{ $i }}][task_name]">{{ $i + 1 }}:担当項目名</label>
-      <div>
-        <input type="text" name="task_charge[{{ $i }}][task_name]" value="{{ old("task_charge.$i.task_name") }}">
-      </div>
-
-      <label for="task_charge[{{ $i }}][user]">担当ユーザー</label>
-      <div>
-        <select name="task_charge[{{ $i }}][user]" >
-          <option value="">選択して下さい</option>
-          @foreach($project->group->users as $user)
-            <option value="{{ $user->id }}" @if(old("task_charge.$i.user_id") == $user->id) selected @endif>{{ $user->name }}</option>
-          @endforeach
-        </select>
-      </div>
-      <label for="task_charge[{{ $i }}][outline]">作業概要</label>
-      <div>
-        <textarea name="task_charge[{{ $i }}][outline]">{{ old("task_charge.$i.outline") }}</textarea>
-      </div>
-      <label for="task_charge[{{ $i }}][order]">実行順序</label>
-      <div>
-        <input type="number" name="task_charge[{{ $i }}][order]" value="{{ old("task_charge.$i.order") }}">
-      </div>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>
+              <label for="task_charge[{{ $i }}][task_name]">{{ $i + 1 }}:担当項目名</label>
+            </th>
+            <th>
+              <label for="task_charge[{{ $i }}][user]">担当ユーザー</label>
+            </th>
+            <th>
+              <label for="task_charge[{{ $i }}][outline]">作業概要</label>
+            </th>
+            <th>
+              <label for="task_charge[{{ $i }}][order]">実行順序</label>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>
+              <input type="text" name="task_charge[{{ $i }}][task_name]" value="{{ old("task_charge.$i.task_name") }}">
+            </th>
+            <th>
+              <select name="task_charge[{{ $i }}][user]" >
+                <option value="">選択して下さい</option>
+                @foreach($project->group->users as $user)
+                <option value="{{ $user->id }}" @if(old("task_charge.$i.user_id") == $user->id) selected @endif>{{ $user->name }}</option>
+                @endforeach
+              </select>
+            </th>
+            <th>
+              <textarea name="task_charge[{{ $i }}][outline]">{{ old("task_charge.$i.outline") }}</textarea>
+            </th>
+            <th>
+              <input type="number" name="task_charge[{{ $i }}][order]" value="{{ old("task_charge.$i.order") }}">
+            </th>
+          </tr>
+        </tbody>
+      </table>
     @endfor
-    <button name="back" type="button" onClick="history.back()" class="btn btn-secondary mt-3">修正</button>
-    <button type="submit" class="btn btn-primary mt-3 ml-3">次へ</button>
+    <div class="d-flex justify-content-end">
+      <button name="back" type="button" onClick="history.back()" class="btn btn-secondary">修正</button>
+      <button type="submit" class="btn btn-primary ml-3">次へ</button>
+    </div>
   </form>
 </div>
 
