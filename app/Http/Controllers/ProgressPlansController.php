@@ -79,7 +79,19 @@ class ProgressPlansController extends Controller
 
     //大型資材積込み拠点選択
     public function location($id, Request $request) {
-
+        $project = Project::with('group.users')->find($id);
+        $project_resources = $request->session()->get('project_resource_input');
+        $resource_stocks_index = ResourceStock::all();
+        $large_resource = [];
+        // 利用資材入力画面で選択した資材に大型資材が含まれているか
+        foreach((array)$project_resources as $project_resource) {
+            $resource_id = $project_resource["resource_name"];
+            $resource = Resource::find($resource_id);
+            if($resource->resource_type == true) {
+                // true(大型資材)の入力値のみ配列に格納する
+                array_push($large_resource, $project_resource);
+            }
+        };
         return view('progress_plans/location');
     }
 
