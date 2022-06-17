@@ -4,6 +4,16 @@
 <div class = 'container'>
   <div>
     <h1>案件情報登録画面</h1>
+    {{--バリデーション--}}
+    @if ($errors->any())
+      <div style="color:red;">
+        <ul>
+          @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+          @endforeach
+        </ul>
+      </div>
+    @endif
   </div>
 
   <div>

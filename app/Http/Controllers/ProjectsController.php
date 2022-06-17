@@ -14,6 +14,14 @@ class ProjectsController extends Controller
 
     private $projectInput = ['project_name', 'group_id', 'outline'];
 
+    //バリデーション
+    private $validator = [
+        'project_name' => 'required',
+        'group_id' => 'required',
+        'outline' => 'required',
+        'file_path' => 'required',
+    ];
+
     //案件一覧
     public function index()
     {
@@ -39,6 +47,15 @@ class ProjectsController extends Controller
     public function store(Request $request) {
         //入力データ取得
         $input = $request->only($this->projectInput);
+        //バリデーションの実行
+        $validator = validator($request->all(), $this->validator);
+        if($validator->fails()){
+            // 案件作成画面にリダイレクト
+            return redirect()->action('ProjectsController@create')
+            // セッション(errors)にエラーの情報を格納
+            ->withErrors($validator);
+        }
+
         $path = $request->file('file_path')->store('public/project_pdf');
         $request->session()->put(["project_input" => $input, "projectPdf" => $path]);
 
