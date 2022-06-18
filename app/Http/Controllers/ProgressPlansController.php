@@ -186,14 +186,24 @@ class ProgressPlansController extends Controller
         return redirect()->action('ProgressPlansController@confirm', ['id' => $project->id]);
     }
 
-    public function confirm() {
-        //
-        return view('progress_plans/confirm');
+    public function confirm($id, Request $request) {
+        $project = Project::with('group.users')->find($id);
+        //担当情報を取得する
+        $task_charges = $request->session()->get('task_charge_input');
+        //案件使用資材を取得する
+        $project_resources = $request->session()->get('resource_stocks_input');
+
+        return view('progress_plans/confirm', compact('project', 'task_charges', 'project_resources'));
     }
 
-    public function confirmStore() {
-        //
-        return redirect()->action('ProgressPlansController@complete');
+    public function confirmStore($id, Request $request) {
+        $project = Project::with('group.users')->find($id);
+        //担当情報を取得する
+        $task_charges = $request->session()->get('task_charge_input');
+        //案件使用資材を取得する
+        $project_resources = $request->session()->get('resource_stocks_input');
+
+        return redirect()->action('ProgressPlansController@complete', ['id' => $project->id]);
     }
 
     public function complete() {
