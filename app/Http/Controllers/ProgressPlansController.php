@@ -180,8 +180,10 @@ class ProgressPlansController extends Controller
         return view('progress_plans/work_schedule', compact('project', 'task_charges', 'project_resources'));
     }
 
-    public function work_scheduleStore() {
-        //
+    //工事実施日程の値を保存
+    public function work_scheduleStore($id, Request $request) {
+        $project = Project::with('group.users')->find($id);
+        return redirect()->action('ProgressPlansController@confirm', ['id' => $project->id]);
     }
 
     public function confirm() {
