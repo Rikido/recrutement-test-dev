@@ -13,6 +13,8 @@ use App\Group;
 use App\Location;
 use App\ProjectResource;
 use App\Vehicle;
+use App\UserWorkSchedule;
+use App\VehicleWorkSchedule;
 
 
 class ProgressPlansController extends Controller
@@ -132,14 +134,12 @@ class ProgressPlansController extends Controller
                         $location_array[$index]["consumption_quantity"] = $resource_stock->stock;
                         // 必要数から在庫分し差し引き、残りの使用数を算出する
                         $large_resource_stock["consumption_quantity"] = $large_resource_stock["consumption_quantity"] - $resource_stock->stock;
-                        // インクリメント
                         $index++;
                         // 在庫分で使用数を満たした場合
                     } else {
                         // 必要数を格納する
                         $location_array[$index]["consumption_quantity"] = (int)$large_resource_stock["consumption_quantity"];
                         $index++;
-                        // breakで外側のループもまとめてスキップ
                         break;
                     }
                 }
@@ -168,6 +168,7 @@ class ProgressPlansController extends Controller
         $request->session()->put('resource_stocks_input', $resource_stocks_input);
         // 工事実施日程の表示画面へ遷移
         return redirect()->action('ProgressPlansController@work_schedule', ['id' => $project->id]);
+
     }
 
     public function work_schedule($id, Request $request) {

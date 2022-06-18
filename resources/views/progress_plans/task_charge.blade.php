@@ -19,7 +19,7 @@
         <thead>
           <tr>
             <th>
-              <label for="task_charges[{{ $i }}][task_name]">{{ $i + 1 }}_担当項目名</label>
+              <label for="task_charges[{{ $i }}][task_name]">{{ $i + 1 }}:担当項目名</label>
             </th>
             <th>
               <label for="task_charges[{{ $i }}][user]">担当ユーザー</label>
