@@ -174,10 +174,14 @@ class ProgressPlansController extends Controller
     public function work_schedule($id, Request $request) {
         $project = Project::with('group.users')->find($id);
         $task_charges = $request->session()->get('task_charge_input');
-
+        $project_resources = $request->session()->get('resource_stocks_input');
         //dd($task_charges);
 
         return view('progress_plans/work_schedule', compact('project', 'task_charges', 'project_resources'));
+    }
+
+    public function work_scheduleStore() {
+        //
     }
 
     public function confirm() {
