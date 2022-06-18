@@ -206,8 +206,8 @@ class ProgressPlansController extends Controller
         return redirect()->action('ProgressPlansController@complete', ['id' => $project->id]);
     }
 
-    public function complete() {
-        //
+    public function complete($id) {
+
         return view('progress_plans/complete');
     }
 
