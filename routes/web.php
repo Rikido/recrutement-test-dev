@@ -44,3 +44,4 @@ Route::get('/project/{id}/progress_plan/confirm', 'ProgressPlansController@confi
 Route::post('/project/{id}/progress_plan/confirm', 'ProgressPlansController@confirmStore');
 Route::get('/project/{id}/progress_plan/complete', 'ProgressPlansController@complete');
 
+

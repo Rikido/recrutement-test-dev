@@ -171,6 +171,19 @@ class ProgressPlansController extends Controller
 
     }
 
+    public function vehicle(Request $request) {
+        $consumption_quantity = $request->input('consumption_quantity');
+        $request->session()->put(["consumption_quantity" => $consumption_quantity]);
+        $project = $request->session()->get('project');
+        $project_resources = $request->session()->get('resource_stocks_input');
+        $vehicles = Vehicle::where('max_size', '>=', $project_resource_stocks["size"])->get();
+        return view('progress_plan.vehicle_select', compact('vehicles', 'project'));
+    }
+
+
+
+
+
     public function work_schedule($id, Request $request) {
         $project = Project::with('group.users')->find($id);
         $task_charges = $request->session()->get('task_charge_input');
