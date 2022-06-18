@@ -19,37 +19,37 @@
         <thead>
           <tr>
             <th>
-              <label for="task_charge[{{ $i }}][task_name]">{{ $i + 1 }}:担当項目名</label>
+              <label for="task_charges[{{ $i }}][task_name]">{{ $i + 1 }}_担当項目名</label>
             </th>
             <th>
-              <label for="task_charge[{{ $i }}][user]">担当ユーザー</label>
+              <label for="task_charges[{{ $i }}][user]">担当ユーザー</label>
             </th>
             <th>
-              <label for="task_charge[{{ $i }}][outline]">作業概要</label>
+              <label for="task_charges[{{ $i }}][outline]">作業概要</label>
             </th>
             <th>
-              <label for="task_charge[{{ $i }}][order]">実行順序</label>
+              <label for="task_charges[{{ $i }}][order]">実行順序</label>
             </th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <th>
-              <input type="text" name="task_charge[{{ $i }}][task_name]" value="{{ old("task_charge.$i.task_name") }}">
+              <input type="text" name="task_charges[{{ $i }}][task_name]" value="{{ old("task_charges.$i.task_name") }}" />
             </th>
             <th>
-              <select name="task_charge[{{ $i }}][user]" >
+              <select name="task_charges[{{ $i }}][user_id]">
                 <option value="">選択して下さい</option>
                 @foreach($project->group->users as $user)
-                <option value="{{ $user->id }}" @if(old("task_charge.$i.user_id") == $user->id) selected @endif>{{ $user->name }}</option>
+                <option value="{{ $user->id }}" @if(old("task_charges.$i.user_id") == $user->id) selected @endif>{{ $user->name }}</option>
                 @endforeach
               </select>
             </th>
             <th>
-              <textarea name="task_charge[{{ $i }}][outline]">{{ old("task_charge.$i.outline") }}</textarea>
+              <textarea name="task_charges[{{ $i }}][outline]">{{ old("task_charges.$i.outline") }}</textarea>
             </th>
             <th>
-              <input type="number" name="task_charge[{{ $i }}][order]" value="{{ old("task_charge.$i.order") }}">
+              <input type="number" min="1" max="20" name="task_charges[{{ $i }}][order]" value="{{ old("task_charges.$i.order") }}">
             </th>
           </tr>
         </tbody>

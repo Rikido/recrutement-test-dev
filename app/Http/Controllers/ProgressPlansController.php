@@ -55,14 +55,30 @@ class ProgressPlansController extends Controller
     public function task_chargeStore($id, Request $request) {
         $project = Project::with('group.users')->find($id);
         $task_charges_input = $request->input('task_charges');
-        // task_chargeから空の配列を削除する
-        //foreach内でunsetを使って特定の要素を削除する
-        foreach( (array)$task_charges_input as $task_charge => $task_charge_copy)
-        {
-            if( $task_charge_copy["task_name"] == null) unset($task_charge[$task_charge]);
+        //空の配列を削除する
+        $task_name_check = array_filter($task_charges_input, function($array){
+            return $array['task_name'];
+        });
+        $user_id_check = array_filter($task_name_check, function($array){
+            return $array['user_id'];
+        });
+        $outline_check = array_filter($user_id_check, function($array){
+            return $array['outline'];
+        });
+        $task_charges = array_filter($outline_check, function($array){
+            return $array['order'];
+        });
+
+        foreach($task_charges as $index => $task_charge) {
+            $task_user = User::find($task_charge["user_id"]);
+            // 担当するユーザーの名前を格納
+            $task_charges[$index]["user_name"] = $task_user->name;
         }
 
+        $request->session()->put('task_charge_input', $task_charges);
         $project_resources = $request->session()->get('project_resource_input');
+
+        //dd($task_charges);
 
         // 利用資材入力画面で選択した資材に大型資材が含まれているか
         foreach($project_resources as $project_resource) {
@@ -71,6 +87,7 @@ class ProgressPlansController extends Controller
             // resource_type=true 大型
             if($resource->resource_type == true) {
                 //大型資材積込み拠点選択画面へ
+                //dd($task_charges);
                 return redirect()->action('ProgressPlansController@location', ['id' => $project->id]);
             }
         };
@@ -101,7 +118,9 @@ class ProgressPlansController extends Controller
 
         $index = 0;
         foreach((array)$large_resource_stocks_array as $large_resource_stock) {
-            $resource_stocks = DB::table('resource_stocks')->where('resource_id', $large_resource_stock["resource_name"])->get();
+            // 利用資材入力画面で選択した資材マスタのidに一致するresource_stocksを全て取得
+            //在庫数が多い順に並べ替える
+            $resource_stocks = DB::table('resource_stocks')->where('resource_id', $large_resource_stock["resource_name"])->orderBy('stock', 'DESC')->get();
 
             foreach((array)$resource_stocks as $resource_stock_array) {
                 foreach((array)$resource_stock_array as $resource_stock) {
@@ -128,12 +147,36 @@ class ProgressPlansController extends Controller
         }
 
         //dd($location_array);
-        return view('progress_plans/location', compact('project', 'resource_stocks_index', 'large_resource_stocks_array', 'location_array'));
+        return view('progress_plans/location', compact('project', 'resource_stocks_index', 'large_resource_array', 'location_array'));
+    }
+
+    public function locationStore($id, Request $request) {
+        $project = Project::with('group.users')->find($id);
+        $resource_stocks_input = $request->input('resource_stocks');
+        $resource_stocks_input = array_filter($resource_stocks_input, function($array){
+            return $array['consumption_quantity'];
+        });
+
+        foreach($resource_stocks_input as $index => $resource_stock) {
+            $select_location = Location::find($resource_stock["location_id"]);
+            $select_resource = Resource::find($resource_stock["resource_id"]);
+            // 選択した拠点の名前を取得
+            $resource_stocks_input[$index]["location_name"] = $select_location->location_name;
+            // 選択した資材の名前を取得
+            $resource_stocks_input[$index]["resource_name"] = $select_resource->resource_name;
+        }
+        $request->session()->put('resource_stocks_input', $resource_stocks_input);
+        // 工事実施日程の表示画面へ遷移
+        return redirect()->action('ProgressPlansController@work_schedule', ['id' => $project->id]);
     }
 
     public function work_schedule($id, Request $request) {
-        //
-        return view('progress_plans/work_schedule');
+        $project = Project::with('group.users')->find($id);
+        $task_charges = $request->session()->get('task_charge_input');
+
+        //dd($task_charges);
+
+        return view('progress_plans/work_schedule', compact('project', 'task_charges', 'project_resources'));
     }
 
     public function confirm() {
