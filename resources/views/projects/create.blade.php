@@ -3,7 +3,10 @@
 @section('content')
 <div class = 'container'>
   <div>
-    <h1>案件情報登録画面</h1>
+    <h2>案件情報登録画面</h2>
+    <div class="d-flex justify-content-end">
+      <a href="{{ url('projects/') }}" class="btn btn-primary">案件一覧</a>
+    </div>
     {{--バリデーション--}}
     @if ($errors->any())
       <div style="color:red;">

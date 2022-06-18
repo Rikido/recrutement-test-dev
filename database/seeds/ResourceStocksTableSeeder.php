@@ -68,6 +68,15 @@ class ResourceStocksTableSeeder extends Seeder
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
+            [
+                'location_id' => 5,
+                'resource_id' => 6,
+                'stock' => 30,
+                'weight' => 100,
+                'size' => 8,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
         ]);
     }
 }

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\DB;
 use App\Project;
 use App\Resource;
 use App\ResourceStock;
@@ -12,6 +12,7 @@ use App\User;
 use App\Group;
 use App\Location;
 use App\ProjectResource;
+use App\Vehicle;
 
 
 class ProgressPlansController extends Controller
@@ -80,19 +81,54 @@ class ProgressPlansController extends Controller
     //大型資材積込み拠点選択
     public function location($id, Request $request) {
         $project = Project::with('group.users')->find($id);
-        $project_resources = $request->session()->get('project_resource_input');
         $resource_stocks_index = ResourceStock::all();
-        $large_resource = [];
+        $project_resources = $request->session()->get('project_resource_input');
+        // 大型資材のみ格納する配列
+        $large_resource_stocks_array = [];
         // 利用資材入力画面で選択した資材に大型資材が含まれているか
         foreach((array)$project_resources as $project_resource) {
             $resource_id = $project_resource["resource_name"];
             $resource = Resource::find($resource_id);
             if($resource->resource_type == true) {
                 // true(大型資材)の入力値のみ配列に格納する
-                array_push($large_resource, $project_resource);
+                array_push($large_resource_stocks_array, $project_resource);
             }
         };
-        return view('progress_plans/location');
+        //dd($project_resource);
+
+        //拠点、資材、使用数を格納する配列
+        $location_array = [];
+
+        $index = 0;
+        foreach((array)$large_resource_stocks_array as $large_resource_stock) {
+            $resource_stocks = DB::table('resource_stocks')->where('resource_id', $large_resource_stock["resource_name"])->get();
+
+            foreach((array)$resource_stocks as $resource_stock_array) {
+                foreach((array)$resource_stock_array as $resource_stock) {
+                    $location_array[$index]["location"] = $resource_stock->location_id;
+                    $location_array[$index]["resource"] = $resource_stock->resource_id;
+                    // 在庫より使用数の方が多い場合
+                    if($resource_stock->stock < $large_resource_stock["consumption_quantity"]) {
+                        // 在庫を全て使用数に格納
+                        $location_array[$index]["consumption_quantity"] = $resource_stock->stock;
+                        // 必要数から在庫分し差し引き、残りの使用数を算出する
+                        $large_resource_stock["consumption_quantity"] = $large_resource_stock["consumption_quantity"] - $resource_stock->stock;
+                        // インクリメント
+                        $index++;
+                        // 在庫分で使用数を満たした場合
+                    } else {
+                        // 必要数を格納する
+                        $location_array[$index]["consumption_quantity"] = (int)$large_resource_stock["consumption_quantity"];
+                        $index++;
+                        // breakで外側のループもまとめてスキップ
+                        break;
+                    }
+                }
+            }
+        }
+
+        //dd($location_array);
+        return view('progress_plans/location', compact('project', 'resource_stocks_index', 'large_resource_stocks_array', 'location_array'));
     }
 
     public function work_schedule($id, Request $request) {
