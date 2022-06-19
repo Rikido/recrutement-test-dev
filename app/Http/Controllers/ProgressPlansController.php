@@ -101,6 +101,7 @@ class ProgressPlansController extends Controller
     public function location($id, Request $request) {
         $project = Project::with('group.users')->find($id);
         $resource_stocks_index = ResourceStock::all();
+        //dd($resource_stocks_index);
         $project_resources = $request->session()->get('project_resource_input');
         // 大型資材のみ格納する配列
         $large_resource_stocks_array = [];
@@ -113,14 +114,13 @@ class ProgressPlansController extends Controller
                 array_push($large_resource_stocks_array, $project_resource);
             }
         };
-        //dd($project_resource);
+        //dd($project_resources);
 
         //拠点、資材、使用数を格納する配列
         $location_array = [];
-
         $index = 0;
         foreach((array)$large_resource_stocks_array as $large_resource_stock) {
-            // 利用資材入力画面で選択した資材マスタのidに一致するresource_stocksを全て取得
+            //利用資材入力画面で選択した資材マスタのidに一致するresource_stocksを全て取得
             //在庫数が多い順に並べ替える
             $resource_stocks = DB::table('resource_stocks')->where('resource_id', $large_resource_stock["resource_name"])->orderBy('stock', 'DESC')->get();
 
@@ -174,16 +174,134 @@ class ProgressPlansController extends Controller
     public function work_schedule($id, Request $request) {
         $project = Project::with('group.users')->find($id);
         $task_charges = $request->session()->get('task_charge_input');
-        $project_resources = $request->session()->get('resource_stocks_input');
+        if(!empty($request->session()->get('resource_stocks_input'))) {
+            $project_resources = $request->session()->get('resource_stocks_input');
+        } else {
+            $project_resources = [];
+        }
         //dd($task_charges);
 
-        return view('progress_plans/work_schedule', compact('project', 'task_charges', 'project_resources'));
+        //使用する車両を格納する配列
+        $vehicles_array = [];
+        $index = 0;
+        if(!empty($project_resources)) {
+            foreach((array)$project_resources as $project_resource) {
+                $resource_stock = ResourceStock::find($project_resource["resource_id"]);
+                $resource_size = $resource_stock["size"];
+                //車両を全て取得
+                $vehicles_index = Vehicle::get();
+
+                foreach((array)$vehicles_index as $vehicles) {
+                    foreach((array)$vehicles as $vehicle) {
+                        //使用する車両の情報を配列に格納する
+                        $vehicles_array[$index]["vehicle_id"] = $vehicle["id"];
+                        $vehicles_array[$index]["vehicle_weight"] = Vehicle::find($vehicle["id"]);
+                        $vehicles_array[$index]["vehicle_size"] = $vehicle["max_size"];
+
+                        //車両に搭載する資材のIDを配列に格納
+                        $vehicles_array[$index]["resource_id"] = $resource_stock["resource_id"];
+                        //車両に搭載する資材の名前を配列に格納
+                        $vehicles_array[$index]["resource_name"] = Resource::find($resource_stock["resource_id"])["resource_name"];
+                        //車両に搭載する資材の重量を配列に格納
+                        $vehicles_array[$index]["resource_weight"] = $resource_stock["weight"];
+                        $index++;
+                        // もし車両に資材を積むことができたら
+                        if(0 == $project_resource["consumption_quantity"]) {
+                            //ループを抜ける
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        //実施日を判断
+        $now_date = date("Y-m-d");
+        $task_charges = $request->session()->get("task_charge_input");
+        //担当情報からユーザーIDを取得する
+        $task_users = [];
+        foreach((array)$task_charges as $task_charge) {
+            array_push($task_users, $task_charge["user_id"]);
+        }
+        //今日以降のユーザー稼働日を昇順で全て取得する
+        $already_user_work_schedule = UserWorkSchedule::whereIn('user_id', $task_users)
+          ->where('work_date', '>', $now_date)
+          ->orderBy('work_date', 'asc')->get()->toArray();
+        //使用する車両のIDを取得する
+        $select_vehicles = [];
+        foreach((array)$vehicles_array as $vehicle_array) {
+            array_push($select_vehicles, $vehicle_array["vehicle_id"]);
+        }
+        //重複するIDを削除
+        $select_vehicles = collect($select_vehicles)->unique()->toArray();
+        //今日以降の車両稼働日を昇順で全て取得する
+        if(!empty($project_resources)) {
+            $already_vehicle_work_schedule = VehicleWorkSchedule::whereIn('vehicle_id', $select_vehicles)
+              ->where('work_date', '>', $now_date)
+              ->orderBy('work_date', 'asc')->get()->toArray();
+        } else {
+            $already_vehicle_work_schedule = [];
+        }
+        //ユーザーも車両も予定がない場合
+        if((empty($already_user_work_schedule)) && (empty($already_vehicle_work_schedule))) {
+            //明日の日付を格納する
+            $work_date = date('Y-m-d', strtotime('+1 day'));
+            //予定がある場合の処理
+        } else {
+            //ユーザーの予定があるか確認
+            if(!empty($already_user_work_schedule)) {
+                $user_i = 1;
+                $user_work_date = date("Y-m-d", strtotime("+{$user_i} day"));
+                foreach((array)$already_user_work_schedule as $already_user_work) {
+                    //明日の日付が既に予定にあった場合
+                    if($user_work_date == $already_user_work["work_date"]) {
+                        //1日後の予定を確認する
+                        $user_i++;
+                        $user_work_date = date("Y-m-d", strtotime("+{$user_i} day"));
+                    } else {
+                        //最短稼働日を取得
+                        $user_work_date = $user_work_date;
+                        continue;
+                    }
+                }
+            }
+
+            //車両の予定があるか確認
+            if(!empty($already_vehicle_work_schedule)) {
+                $vehicle_i = 1;
+                $vehicle_work_date = date("Y-m-d", strtotime("+{$vehicle_i} day"));
+                //車両の最短稼働日を取得
+                foreach((array)$already_vehicle_work_schedule as $already_vehicle_work) {
+                    if($vehicle_work_date == $already_vehicle_work["work_date"]) {
+                        $vehicle_i++;
+                        $vehicle_work_date = date("Y-m-d", strtotime("+{$vehicle_i} day"));
+                    } else {
+                        $vehicle_work_date = $vehicle_work_date;
+                        continue;
+                    }
+                }
+            }
+            //ユーザーの予定がない場合
+            if(empty($user_work_date)) {
+                $work_date = $vehicle_work_date;
+            } elseif (empty($vehicle_work_date)) {
+                $work_date = $user_work_date;
+            } else {
+                //ユーザーと車両それぞれの稼働日の大きい方を取得する
+                $work_date = max($user_work_date, $vehicle_work_date);
+            }
+        }
+
+        $request->session()->put('vehicles_select_input', $vehicles_array);
+        return view('progress_plans/work_schedule', compact('project', 'task_charges', 'project_resources', 'vehicles_array', 'work_date'));
     }
 
     //工事実施日程の値を保存
     public function work_scheduleStore($id, Request $request) {
-        $project = Project::with('group.users')->find($id);
-
+        $project = Project::findOrFail($id);
+        //$project = Project::with('group.users')->find($id);
+        $work_date = $request->input('work_date');
+        $request->session()->put('work_date_input', $work_date);
         return redirect()->action('ProgressPlansController@confirm', ['id' => $project->id]);
     }
 
@@ -193,8 +311,10 @@ class ProgressPlansController extends Controller
         $task_charges = $request->session()->get('task_charge_input');
         //案件使用資材を取得する
         $project_resources = $request->session()->get('resource_stocks_input');
-
-        return view('progress_plans/confirm', compact('project', 'task_charges', 'project_resources'));
+        //工事実施日を取得する
+        $work_date = $request->session()->get('work_date_input');
+        //dd($work_date);
+        return view('progress_plans/confirm', compact('project', 'task_charges', 'project_resources', 'work_date'));
     }
 
     public function confirmStore($id, Request $request) {
@@ -203,6 +323,8 @@ class ProgressPlansController extends Controller
         $task_charges = $request->session()->get('task_charge_input');
         //案件使用資材を取得する
         $project_resources = $request->session()->get('resource_stocks_input');
+        //工事実施日を取得する
+        $work_date = $request->session()->get('work_date_input');
 
         foreach((array)$task_charges as $task_charge_data) {
             $task_charge = new TaskCharge;
@@ -224,7 +346,16 @@ class ProgressPlansController extends Controller
                 $project_resource->save();
             }
         }
-        $request->session()->forget('project_resource_input', 'task_charge_input', 'resource_stocks_input');
+
+        foreach((array)$task_charges as $task_charge_data) {
+            $user_work_schedule = new UserWorkSchedule;
+            $user_work_schedule->project_id = $project->id;
+            $user_work_schedule->user_id = $task_charge_data["user_id"];
+            $user_work_schedule->work_date = $work_date;
+            $user_work_schedule->save();
+        }
+
+        $request->session()->forget('project_resource_input', 'task_charge_input', 'work_date_input', 'resource_stocks_input');
         return redirect()->action('ProgressPlansController@complete', ['id' => $project->id]);
     }
 

@@ -25,6 +25,7 @@
     @endforeach
   @endif
 
+  <strong>工事実施日程：{{ $work_date }}</strong>
   <form method="post" action="/project/{{ $project->id }}/progress_plan/confirm">
   @csrf
     <button name="back" type="button" onClick="history.back()" class="btn btn-secondary">修正</button>
