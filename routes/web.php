@@ -46,4 +46,4 @@ Route::get('/project/{id}/progress_plan/complete', 'ProgressPlansController@comp
 
 Route::get('/project/{id}/task_charge/{task_charge_id}/create', 'TaskChargeCompletesController@create');
 Route::post('/project/{id}/task_charge/{task_charge_id}/create', 'TaskChargeCompletesController@createStore');
-
+Route::get('/project/{id}/task_charge/{task_charge_id}/complete', 'TaskChargeCompletesController@complete');
