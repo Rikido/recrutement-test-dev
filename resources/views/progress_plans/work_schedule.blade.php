@@ -3,6 +3,7 @@
 @section('content')
 <div class = 'container'>
   <h1>工事実施日程の表示</h1>
+
   <h3>案件名：{{ $project->project_name }}</h3>
   <strong>案件概要</strong>
   <p>{{ $project->outline }}</p>
@@ -29,6 +30,7 @@
   <form method="post" action="/project/{{ $project->id }}/progress_plan/work_schedule">
   @csrf
   <strong>工事実施日程：{{ $work_date }}</strong>
+  <input type="hidden" name="work_date" value="{{ $work_date }}">
   <div>
     <button name="back" type="button" onClick="history.back()" class="btn btn-secondary">修正</button>
     <button type="submit" class="btn btn-primary ml-3">次へ</button>

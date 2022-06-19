@@ -42,8 +42,6 @@ class ProgressPlansController extends Controller
         });
 
         $request->session()->put('project_resource_input', $project_resource);
-        //dd($project_resource);
-
         return redirect()->action('ProgressPlansController@task_charge', ['id' => $project->id]);
     }
 
@@ -79,9 +77,6 @@ class ProgressPlansController extends Controller
 
         $request->session()->put('task_charge_input', $task_charges);
         $project_resources = $request->session()->get('project_resource_input');
-
-        //dd($task_charges);
-
         // 利用資材入力画面で選択した資材に大型資材が含まれているか
         foreach($project_resources as $project_resource) {
             $resource_id = $project_resource["resource_name"];
@@ -128,16 +123,16 @@ class ProgressPlansController extends Controller
                 foreach((array)$resource_stock_array as $resource_stock) {
                     $location_array[$index]["location"] = $resource_stock->location_id;
                     $location_array[$index]["resource"] = $resource_stock->resource_id;
-                    // 在庫より使用数の方が多い場合
+                    //在庫より使用数の方が多い場合
                     if($resource_stock->stock < $large_resource_stock["consumption_quantity"]) {
-                        // 在庫を全て使用数に格納
+                        //在庫を全て使用数に格納
                         $location_array[$index]["consumption_quantity"] = $resource_stock->stock;
-                        // 必要数から在庫分し差し引き、残りの使用数を算出する
+                        //必要数から在庫分し差し引き、残りの使用数を算出する
                         $large_resource_stock["consumption_quantity"] = $large_resource_stock["consumption_quantity"] - $resource_stock->stock;
                         $index++;
-                        // 在庫分で使用数を満たした場合
+                        //在庫分で使用数を満たした場合
                     } else {
-                        // 必要数を格納する
+                        //必要数を格納する
                         $location_array[$index]["consumption_quantity"] = (int)$large_resource_stock["consumption_quantity"];
                         $index++;
                         break;
@@ -168,7 +163,6 @@ class ProgressPlansController extends Controller
         $request->session()->put('resource_stocks_input', $resource_stocks_input);
         // 工事実施日程の表示画面へ遷移
         return redirect()->action('ProgressPlansController@work_schedule', ['id' => $project->id]);
-
     }
 
     public function work_schedule($id, Request $request) {
@@ -180,7 +174,6 @@ class ProgressPlansController extends Controller
             $project_resources = [];
         }
         //dd($task_charges);
-
         //使用する車両を格納する配列
         $vehicles_array = [];
         $index = 0;
@@ -197,7 +190,6 @@ class ProgressPlansController extends Controller
                         $vehicles_array[$index]["vehicle_id"] = $vehicle["id"];
                         $vehicles_array[$index]["vehicle_weight"] = Vehicle::find($vehicle["id"]);
                         $vehicles_array[$index]["vehicle_size"] = $vehicle["max_size"];
-
                         //車両に搭載する資材のIDを配列に格納
                         $vehicles_array[$index]["resource_id"] = $resource_stock["resource_id"];
                         //車両に搭載する資材の名前を配列に格納
@@ -299,7 +291,6 @@ class ProgressPlansController extends Controller
     //工事実施日程の値を保存
     public function work_scheduleStore($id, Request $request) {
         $project = Project::findOrFail($id);
-        //$project = Project::with('group.users')->find($id);
         $work_date = $request->input('work_date');
         $request->session()->put('work_date_input', $work_date);
         return redirect()->action('ProgressPlansController@confirm', ['id' => $project->id]);
@@ -364,5 +355,4 @@ class ProgressPlansController extends Controller
         //dd($project);
         return view('progress_plans/complete', compact('project'));
     }
-
 }
