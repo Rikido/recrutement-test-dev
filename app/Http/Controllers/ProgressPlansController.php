@@ -171,19 +171,6 @@ class ProgressPlansController extends Controller
 
     }
 
-    public function vehicle(Request $request) {
-        $consumption_quantity = $request->input('consumption_quantity');
-        $request->session()->put(["consumption_quantity" => $consumption_quantity]);
-        $project = $request->session()->get('project');
-        $project_resources = $request->session()->get('resource_stocks_input');
-        $vehicles = Vehicle::where('max_size', '>=', $project_resource_stocks["size"])->get();
-        return view('progress_plan.vehicle_select', compact('vehicles', 'project'));
-    }
-
-
-
-
-
     public function work_schedule($id, Request $request) {
         $project = Project::with('group.users')->find($id);
         $task_charges = $request->session()->get('task_charge_input');
@@ -196,6 +183,7 @@ class ProgressPlansController extends Controller
     //工事実施日程の値を保存
     public function work_scheduleStore($id, Request $request) {
         $project = Project::with('group.users')->find($id);
+
         return redirect()->action('ProgressPlansController@confirm', ['id' => $project->id]);
     }
 
@@ -216,12 +204,34 @@ class ProgressPlansController extends Controller
         //案件使用資材を取得する
         $project_resources = $request->session()->get('resource_stocks_input');
 
+        foreach((array)$task_charges as $task_charge_data) {
+            $task_charge = new TaskCharge;
+            $task_charge->project_id = $project->id;
+            $task_charge->task_name = $task_charge_data["task_name"];
+            $task_charge->user_id = $task_charge_data["user_id"];
+            $task_charge->outline = $task_charge_data["outline"];
+            $task_charge->order = $task_charge_data["order"];
+            $task_charge->save();
+        }
+
+        if(!empty($project_resources)) {
+            foreach((array)$project_resources as $project_resource_data) {
+                $project_resource = new ProjectResource;
+                $project_resource->project_id = $project->id;
+                $project_resource->resource_id = $project_resource_data["resource_id"];
+                $project_resource->location_id = $project_resource_data["location_id"];
+                $project_resource->consumption_quantity = $project_resource_data["consumption_quantity"];
+                $project_resource->save();
+            }
+        }
+        $request->session()->forget('project_resource_input', 'task_charge_input', 'resource_stocks_input');
         return redirect()->action('ProgressPlansController@complete', ['id' => $project->id]);
     }
 
     public function complete($id) {
-
-        return view('progress_plans/complete');
+        $project = Project::with('group.users')->find($id);
+        //dd($project);
+        return view('progress_plans/complete', compact('project'));
     }
 
 }

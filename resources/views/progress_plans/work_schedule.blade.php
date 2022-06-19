@@ -28,6 +28,7 @@
 
   <form method="post" action="/project/{{ $project->id }}/progress_plan/work_schedule">
   @csrf
+  <strong>工事実施日程</strong>
     <button name="back" type="button" onClick="history.back()" class="btn btn-secondary">修正</button>
     <button type="submit" class="btn btn-primary ml-3">次へ</button>
   </form>
