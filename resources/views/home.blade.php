@@ -17,6 +17,7 @@
                     You are logged in!<br>
                     <a href="{{ url('projects/create') }}" class="btn btn-secondary mt-3">新規案件の登録</a>
                     <a href="{{ url('projects/') }}" class="btn btn-secondary mt-3 ml-3">案件一覧</a>
+                    <a href="{{ url('groups/') }}" class="btn btn-secondary mt-3 ml-3">グループ一覧</a>
                 </div>
             </div>
         </div>

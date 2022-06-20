@@ -2,6 +2,10 @@
 
 @section('content')
 <div class =container>
+  <div class="d-flex justify-content-end">
+    <a href="{{ url('projects/create') }}" class="btn btn-primary mr-3">新規案件の登録</a>
+    <a href="{{ url('projects/') }}" class="btn btn-primary">案件一覧</a>
+  </div>
   <div>
     <h1>グループ一覧画面</h1>
   </div>

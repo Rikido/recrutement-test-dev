@@ -4,6 +4,7 @@
 <div class = container>
   <div>
     <div class="d-flex justify-content-end">
+      <a href="{{ url('groups/') }}" class="btn btn-primary mr-3">グループ一覧</a>
       <a href="{{ url('projects/create') }}" class="btn btn-primary">新規案件の登録</a>
     </div>
     <h2>案件一覧</h2>
