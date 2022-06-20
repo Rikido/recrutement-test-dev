@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Project;
-
+use Illuminate\Support\Facades\Auth;
 class ProjectsController extends Controller
+
 {
     //ログイン認証
     public function __construct(){
@@ -26,8 +27,8 @@ class ProjectsController extends Controller
     public function index()
     {
         $projects = Project::with('group')->get();
-
-        return view('projects/index', [ 'projects' => $projects ]);
+        $auths = Auth::user();
+        return view('projects/index', compact('projects', 'auths'));
     }
 
     //案件登録
