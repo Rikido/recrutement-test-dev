@@ -46,7 +46,8 @@
     </table>
     @endfor
     <div class="d-flex justify-content-end">
-      <button type="submit" class="btn btn-primary">次へ</button>
+    <button name="back" type="button" onClick="history.back()" class="btn btn-secondary">修正</button>
+      <button type="submit" class="btn btn-primary ml-3">次へ</button>
     </div>
   </form>
 </div>

@@ -14,7 +14,6 @@ class ProjectsController extends Controller
     }
 
     private $projectInput = ['project_name', 'group_id', 'outline'];
-
     //バリデーション
     private $validator = [
         'project_name' => 'required',
@@ -36,11 +35,6 @@ class ProjectsController extends Controller
         //ログインユーザーが所属しているgroup
         $auth_user_groups = auth()->user()->groups;
 
-        /*foreach($auth_user_groups as $auth_user_group){
-            var_dump($auth_user_group->group_name);
-        }
-        exit;
-        dd($auth_user_groups[0]->group_name);*/
         return view('projects/create', compact('auth_user_groups'));
     }
 
@@ -94,17 +88,13 @@ class ProjectsController extends Controller
         $project->outline = $input["outline"];
         $project->file_path = $path;
         $project->save();
-
         // セッションを空にする
         $request->session()->forget('input', 'path');
-
         return redirect('/projects/complete');
     }
 
-
     //案件作成完了
     public function complete() {
-
         return view('projects/complete');
     }
 }

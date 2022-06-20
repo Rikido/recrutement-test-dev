@@ -2,6 +2,9 @@
 
 @section('content')
 <div class = 'container'>
+<div class="d-flex justify-content-end">
+  <a href="{{ url('projects/') }}" class="btn btn-primary">案件一覧</a>
+</div>
 <h3 class="text-center">進行プラン詳細</h3>
   <div>
     <div class="form-group">

@@ -32,17 +32,19 @@ Route::prefix('projects')->group(function() {
 
 });
 
-Route::get('/project/{id}/progress_plan/resource', 'ProgressPlansController@resource');
-Route::post('/project/{id}/progress_plan/resource', 'ProgressPlansController@resourceStore');
-Route::get('/project/{id}/progress_plan/task_charge', 'ProgressPlansController@task_charge');
-Route::post('/project/{id}/progress_plan/task_charge', 'ProgressPlansController@task_chargeStore');
-Route::get('/project/{id}/progress_plan/location', 'ProgressPlansController@location');
-Route::post('/project/{id}/progress_plan/location', 'ProgressPlansController@locationStore');
-Route::get('/project/{id}/progress_plan/work_schedule', 'ProgressPlansController@work_schedule');
-Route::post('/project/{id}/progress_plan/work_schedule', 'ProgressPlansController@work_scheduleStore');
-Route::get('/project/{id}/progress_plan/confirm', 'ProgressPlansController@confirm');
-Route::post('/project/{id}/progress_plan/confirm', 'ProgressPlansController@confirmStore');
-Route::get('/project/{id}/progress_plan/complete', 'ProgressPlansController@complete');
+Route::prefix('project/{id}/progress_plan')->group(function() {
+    Route::get('resource', 'ProgressPlansController@resource');
+    Route::post('resource', 'ProgressPlansController@resourceStore');
+    Route::get('task_charge', 'ProgressPlansController@task_charge');
+    Route::post('task_charge', 'ProgressPlansController@task_chargeStore');
+    Route::get('location', 'ProgressPlansController@location');
+    Route::post('location', 'ProgressPlansController@locationStore');
+    Route::get('work_schedule', 'ProgressPlansController@work_schedule');
+    Route::post('work_schedule', 'ProgressPlansController@work_scheduleStore');
+    Route::get('confirm', 'ProgressPlansController@confirm');
+    Route::post('confirm', 'ProgressPlansController@confirmStore');
+    Route::get('complete', 'ProgressPlansController@complete');
+});
 
 Route::get('/project/{id}/task_charge/{task_charge_id}/create', 'TaskChargeCompletesController@create');
 Route::post('/project/{id}/task_charge/{task_charge_id}/create', 'TaskChargeCompletesController@createStore');

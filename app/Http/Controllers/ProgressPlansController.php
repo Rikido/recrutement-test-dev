@@ -23,7 +23,6 @@ class ProgressPlansController extends Controller
     public function resource($id) {
         $project = Project::with('group.users')->find($id);
         $resources = Resource::all();
-        session()->put('project', $project);
 
         return view('progress_plans/resource', compact('project', 'resources'));
     }
@@ -40,7 +39,6 @@ class ProgressPlansController extends Controller
         $project_resource = array_filter($project_resource_name, function($array) {
              return $array['consumption_quantity'];
         });
-
         $request->session()->put('project_resource_input', $project_resource);
         return redirect()->action('ProgressPlansController@task_charge', ['id' => $project->id]);
     }
@@ -109,7 +107,6 @@ class ProgressPlansController extends Controller
                 array_push($large_resource_stocks_array, $project_resource);
             }
         };
-        //dd($project_resources);
 
         //拠点、資材、使用数を格納する配列
         $location_array = [];
@@ -118,7 +115,6 @@ class ProgressPlansController extends Controller
             //利用資材入力画面で選択した資材マスタのidに一致するresource_stocksを全て取得
             //在庫数が多い順に並べ替える
             $resource_stocks = DB::table('resource_stocks')->where('resource_id', $large_resource_stock["resource_name"])->orderBy('stock', 'DESC')->get();
-
             foreach((array)$resource_stocks as $resource_stock_array) {
                 foreach((array)$resource_stock_array as $resource_stock) {
                     $location_array[$index]["location"] = $resource_stock->location_id;
@@ -140,9 +136,8 @@ class ProgressPlansController extends Controller
                 }
             }
         }
-
-        //dd($location_array);
-        return view('progress_plans/location', compact('project', 'resource_stocks_index', 'large_resource_array', 'location_array'));
+        //dd($large_resource_stock);
+        return view('progress_plans/location', compact('project', 'resource_stocks_index', 'large_resource_stock', 'location_array'));
     }
 
     public function locationStore($id, Request $request) {
@@ -177,13 +172,13 @@ class ProgressPlansController extends Controller
         //使用する車両を格納する配列
         $vehicles_array = [];
         $index = 0;
+
         if(!empty($project_resources)) {
             foreach((array)$project_resources as $project_resource) {
                 $resource_stock = ResourceStock::find($project_resource["resource_id"]);
-                $resource_size = $resource_stock["size"];
+                $resource_size = $resource_stock['size'];
                 //車両を全て取得
                 $vehicles_index = Vehicle::get();
-
                 foreach((array)$vehicles_index as $vehicles) {
                     foreach((array)$vehicles as $vehicle) {
                         //使用する車両の情報を配列に格納する
@@ -257,7 +252,6 @@ class ProgressPlansController extends Controller
                     }
                 }
             }
-
             //車両の予定があるか確認
             if(!empty($already_vehicle_work_schedule)) {
                 $vehicle_i = 1;
@@ -283,7 +277,6 @@ class ProgressPlansController extends Controller
                 $work_date = max($user_work_date, $vehicle_work_date);
             }
         }
-
         $request->session()->put('vehicles_select_input', $vehicles_array);
         return view('progress_plans/work_schedule', compact('project', 'task_charges', 'project_resources', 'vehicles_array', 'work_date'));
     }
@@ -316,7 +309,6 @@ class ProgressPlansController extends Controller
         $project_resources = $request->session()->get('resource_stocks_input');
         //工事実施日を取得する
         $work_date = $request->session()->get('work_date_input');
-
         foreach((array)$task_charges as $task_charge_data) {
             $task_charge = new TaskCharge;
             $task_charge->project_id = $project->id;
