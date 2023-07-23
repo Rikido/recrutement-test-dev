@@ -29,7 +29,7 @@ RUN mkdir -p /var/log/mysql
 RUN yum install -y httpd
 
 RUN wget https://downloads.mariadb.com/MariaDB/mariadb_repo_setup
-RUN bash mariadb_repo_setup --mariadb-server-version="mariadb-10.3"
+RUN bash mariadb_repo_setup --mariadb-server-version="mariadb-10.11.4"
 RUN yum -y install MariaDB-server MariaDB-client
 RUN chmod -R 777 /var/log/mysql
 
